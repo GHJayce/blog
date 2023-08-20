@@ -1,6 +1,6 @@
 ---
-title: "记录hugo快速上手搭建一个静态博客"
-slug: hugo-quick-start-and-build-blog
+title: "hugo快速上手搭建一个静态博客"
+slug: static-site-generator/hugo/quick-start
 date: 2023-06-20T23:46:50+08:00
 image: https://repository-images.githubusercontent.com/11180687/9d3d8200-abf2-11e9-803c-4cdfde0d22e5
 categories:
@@ -127,3 +127,4 @@ hugo
 
 ## 参考
 1. [Quick Start | Hugo](https://gohugo.io/getting-started/quick-start/)
+2. [URL management | Hugo](https://gohugo.io/content-management/urls/)
