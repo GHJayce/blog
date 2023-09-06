@@ -2,6 +2,7 @@
 title: "第二章 线性表 - 《数据结构导论》笔记"
 date: 2023-08-29T14:46:12+08:00
 slug: book/080901/02142/chapter2
+image:
 categories:
     - 书籍
 tags:
@@ -76,8 +77,7 @@ draft: false
 4. 线性表通常表示成：`(A1, A2, A3, ..., An)`，其中：
 	- A1称为**起始结点**。
 	- An称为**终端结点**。
-	- A1是A2的**直接前驱**，其他结点同理。
-	- A3是A2的**直接后继**，其他结点同理。
+	- A1是A2的**直接前驱**，A3是A2的**直接后继**，其他结点同理。
 
 ### 特征
 1. 线性表中结点之间具有一对一的关系。
@@ -86,18 +86,22 @@ draft: false
 	- 除了终端结点没有直接后继（例：An），其他的结点有且仅有一个直接后继（例：A1、A2等）。
 
 ### 基本运算的功能描述
+
+> 以下的no指的是序号，文中所有提到的“位置”都是指序号。
+> 
+> 避免用i命名是怕和数组的下标混在一起，数组的下标是从0开始，而序号是从1开始。
+
+
 1. 初始化`Initiate(L)`：建立一个空表`L=()`，L不包含任何结点。
 2. 求表长`Length(L)`：返回线性表L的长度，以下简称表L。
-3. 读取元素`Get(L, n)`：返回表L的第n个结点，当n超出`Length(L) ≥ n ≥ 1`范围，返回一特殊值。
-4. 定位`Locate(L, x)`：返回表L中第一个结点的值等于x的序号，如果找不到则返回0。
-5. 插入`Insert(L, x, n)` ：两个步骤。
-	- 在表L的第n个结点之前插入一个新结点x，n的合法范围：`Length(L) + 1 ≥ n ≥ 1`。
+3. 读取元素`Get(L, no)`：返回表L的第no个结点，当no超出`Length(L) ≥ no ≥ 1`范围，返回一特殊值。
+4. 定位`Locate(L, x)`：返回表L中第一个结点的值等于x值的序号，如果找不到则返回0。
+5. 插入`Insert(L, x, no)` ：两个步骤。
+	- 在表L的第no个结点之前插入一个新结点x，no的合法范围：`Length(L) + 1 ≥ no ≥ 1`。
 	- 表长度加1。
-6. 删除`Delete(L, n)`：两个步骤。
-	- 删除表L的第n个结点，n的合法范围：`Length(L) ≥ i ≥ 1`。
+6. 删除`Delete(L, no)`：两个步骤。
+	- 删除表L的第no个结点，no的合法范围：`Length(L) ≥ no ≥ 1`。
 	- 表长度减1。
-
-> 这里的n指的是no序号，避免用i是怕和数组的下标混在一起，数组的下标是从0开始，而序号是从1开始。
 
 ## 顺序表
 ### 概念
@@ -116,21 +120,102 @@ typedef struct
 SeqList L; // 定义L为一个顺序表
 ```
 
-### 运算
+例子：
 ```c
-void func(SeqList L, DataType x, int n)
+const int Maxsize = 7; // 预先定义数组大小
+typedef struct
 {
-	// 1. 检查插入位置是否合法
-	if (L.length === Maxsize) exit("表已满");
-	// 序号小于1或者序号超过表长都不行
-	if (n < 1 || i > L.length + 1) exit("插入位置不正确");
-	// 2. 从后往前依次将结点往后一个位置移动，直到到达插入序号的位置，执行完移动后停止
-	for (j = L.length; j >= n; j--) {
+	int num; // 学号
+	char name[8]; // 姓名
+	int age; // 年龄
+} DataType; // 定义结点的类型
+typedef struct
+{
+	DataType data[Maxsize]; // 存放数据的数组
+	int length; // 线性表的实际长度
+} SeqList; // 顺序表的类型
+SeqList student; // student是顺序表的名称
+```
+
+### 运算
+#### 插入
+算法：
+```c
+void func(SeqList L, DataType x, int no)
+{
+	if (L.length >= Maxsize) exit("表已满");
+	// 等同于：no <= 0 || no >= L.length + 2
+	if (no < 1 || no > L.length + 1) exit("插入位置不正确");
+	for (j = L.length; j >= no; j--) {
 		L.data[j] = L.data[j - 1];
 	}
-	// 3. 插入新的结点x
-	L.data[n - 1] = x;
-	// 4. 表长加一
+	L.data[no - 1] = x;
 	L.length++;
 }
 ```
+
+步骤：
+1. 检查插入位置是否合法。
+	1. 表容量，**表满了以后不能再插入**。
+	2. 插入位置：
+		- **不能插入序号no = 0及之前的位置**，no = 1的位置可以插入。
+		- 要插入的位置，它前面的位置不能是空的，也就是**不能断开插入**。
+			- 例：插入第5个位置，第4个位置是空的。
+2. 为插入位置腾出空位，从最后一个结点开始从后往前循环，将结点往后移一个位置，直到插入位置结束。
+3. 插入新的结点x，也就是序号no的位置，对应下标为：no-1。
+4. 表长度加一。
+
+#### 删除
+算法：
+```c
+void DeleteSeqList(SeqList L, int no)
+{
+	// 等同于：no <= 0 || no >= L.length + 1
+	if (no < 1 || no > L.length)
+		exit("非法位置");
+	for (j = no, j < L.length; j++) {
+		L.data[j-1] = L.data[j];
+	}
+	L.length--;
+}
+```
+
+步骤：
+1. 检查删除位置是否合法，不能是0及之前的位置，也不能是超出表长之后的位置。
+2. 覆盖结点，从删除位置开始，后一个结点移动到前一个位置，直到最后一个结点结束，即表示删除。
+3. 表长度减一。
+
+#### 定位
+算法：
+```c
+void findSeqList(SeqList L, DataType x)
+{
+	int i = 0;
+	while ((i < L.length) && (L.data[i] != x)) {
+		i++;
+	}
+	if (i < L.length) {
+		return i + 1;
+	}
+	return 0;
+}
+```
+
+步骤：
+1. 初始化一个下标值：0。
+2. 从头到尾逐个比对，数组中的结点是否与结点x相等：
+	1. 不相等则继续循环。
+	2. 相等则表示已经找到，停止循环。
+3. 返回查找结果。
+
+
+## 参考
+1. 关于平均移动次数相关：
+	1. [数据结构 顺序查找的平均比较次数不是1+n/2吗？为什么是n/2？\_百度知道](https://zhidao.baidu.com/question/1990806677193064547.html)
+	2. [顺序表插入、删除平均移动次数 - 哔哩哔哩](https://www.bilibili.com/read/cv11875290/)
+	3. [向一个有N个元素的顺序表中插入一个元素，平均要移动的次数为多少\_在由n个元素的顺序表中插入所移动的平均次数-CSDN博客](https://blog.csdn.net/weixin_44023015/article/details/107017187)
+	4. [顺序表中插入和删除需要的平均移动次数，怎么算啊？](https://zhidao.baidu.com/question/242399471118772124.html)
+	5. [线性表顺序存储插入和删除新节点时平均移动次数\_李明泽的技术博客\_51CTO博客](https://blog.51cto.com/u_3961409/1045218)
+	6. [为什么顺序表的插入算法的平均移动次数约为n/2？其比较和移动的次数为n-i+1（i=1,2,...,n+1）\_百度知道](https://zhidao.baidu.com/question/1823359260927561268.html)
+	7. [线性表（顺序存储）插入和删除节点的平均移动次数计算 - 麦克斯的园丁 - 博客园](https://www.cnblogs.com/hsiangyu-meng/p/16649631.html)
+	8. [小学数学—计算之等差数列\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1u8411j7Tn)

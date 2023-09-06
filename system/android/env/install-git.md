@@ -1,7 +1,7 @@
 ---
 title: "在android上安装git环境"
 slug: system/android/env/install-git
-date: 2023-08-30T11:15:51+08:00
+date: 2023-08-30T13:26:26+08:00
 categories:
     - 操作系统
 tags:
@@ -26,7 +26,7 @@ tags:
 
 好家伙，ppk的方式也不行，也不想再试了，那为什么用的好好的账密认证方式出了问题呢？
 
-我估计是最近github强制使用MFA的关系，登录账号需要经过MFA的验证，app应该是没有做这个异常处理，而且app也没办法升级。
+我估计是最近github强制使用MFA的关系，登录账号需要经过2FA的验证，app应该是没有做这个异常处理，而且app也没办法升级。
 
 于是我放弃了这个app，换了另一条路。
 
