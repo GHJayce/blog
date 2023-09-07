@@ -165,6 +165,27 @@ void func(SeqList L, DataType x, int no)
 3. 插入新的结点x，也就是序号no的位置，对应下标为：no-1。
 4. 表长度加一。
 
+分析：
+- 算法复杂度：O(n)。
+- 平均移动次数：$\frac{n}{2}$。
+
+插入算法中，元素的移动次数不仅与顺序表的长度n有关，还和插入的no位置有关：
+- 当插入位置是n+1时，移动次数为0。
+- 当插入位置是n时，移动次数为1，这个称为首项（从存在的元素中选取，它也可以是尾项）。
+- 当插入位置是n-1时，移动次数为2。
+- 当插入位置是n-2时，移动次数为3。
+- ...
+- 当插入位置是1时，移动次数为n，这个称为末项。
+
+根据移动次数变化的规律可以看出：
+1. 移动次数的计算方式为：`n - no + 1`。
+2. 可插入的位置有：`n + 1`个。
+3. 这是个[等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)。
+	- 使用[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式可以得出总的移动次数为：$\frac{(n + 1) \times n}{2}$。
+	- 因此平均移动次数：$\frac{总移动次数}{可插入位置}$也就是$\frac{\frac{(n + 1) \times n}{2}}{n + 1}$约为$\frac{n}{2}$。
+
+> 如果我有理解错平均移动次数，请大佬随时斧正，<a href="mailto:jaycedeng@outlook.com" target="_blank" class="link">联系我</a>。
+
 #### 删除
 算法：
 ```c
@@ -184,6 +205,26 @@ void DeleteSeqList(SeqList L, int no)
 1. 检查删除位置是否合法，不能是0及之前的位置，也不能是超出表长之后的位置。
 2. 覆盖结点，从删除位置开始，后一个结点移动到前一个位置，直到最后一个结点结束，即表示删除。
 3. 表长度减一。
+
+分析：
+- 算法复杂度：O(n)。
+- 平均移动次数：$\frac{n-1}{2}$。
+
+跟插入算法一样：
+- 当删除位置是n时，移动次数为0。
+- 当删除位置是n-1时，移动次数为1。
+- 当删除位置是n-2时，移动次数为2。
+- ...
+- 当删除位置是1时，移动次数为n-1。
+
+根据规律得出：
+- 移动次数的计算方式：`n - no`。
+- 可删除的位置有：`n`个。
+- 同样是[等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)。
+	- 使用[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式得出总的移动次数：$\frac{(0 + n - 1) \times n}{2}$。
+	- 平均移动次数：$\frac{总移动次数}{可删除的位置}$也就是$\frac{\frac{(0 + n - 1) \times n}{2}}{n}$约为$\frac{n-1}{2}$。
+
+> 如果我有理解错平均移动次数，请大佬随时斧正，<a href="mailto:jaycedeng@outlook.com" target="_blank" class="link">联系我</a>。
 
 #### 定位
 算法：
@@ -208,14 +249,14 @@ void findSeqList(SeqList L, DataType x)
 	2. 相等则表示已经找到，停止循环。
 3. 返回查找结果。
 
+#### 表长
+只需要返回L.length即可
+
+## 链表
+- 链式存储：各个结点在内存中的存储位置并不连续，可以存放在不同位置，指针表示数据元素之间的逻辑关系。
+- 链表：用链式存储实现的线性表，结点之间可以重新链接，链表分为：
+	- 单链表：一个链表结点由一个数据元素和一个指针构成。
+	- 循环链表：
+	- 双向循环链表：
 
 ## 参考
-1. 关于平均移动次数相关：
-	1. [数据结构 顺序查找的平均比较次数不是1+n/2吗？为什么是n/2？\_百度知道](https://zhidao.baidu.com/question/1990806677193064547.html)
-	2. [顺序表插入、删除平均移动次数 - 哔哩哔哩](https://www.bilibili.com/read/cv11875290/)
-	3. [向一个有N个元素的顺序表中插入一个元素，平均要移动的次数为多少\_在由n个元素的顺序表中插入所移动的平均次数-CSDN博客](https://blog.csdn.net/weixin_44023015/article/details/107017187)
-	4. [顺序表中插入和删除需要的平均移动次数，怎么算啊？](https://zhidao.baidu.com/question/242399471118772124.html)
-	5. [线性表顺序存储插入和删除新节点时平均移动次数\_李明泽的技术博客\_51CTO博客](https://blog.51cto.com/u_3961409/1045218)
-	6. [为什么顺序表的插入算法的平均移动次数约为n/2？其比较和移动的次数为n-i+1（i=1,2,...,n+1）\_百度知道](https://zhidao.baidu.com/question/1823359260927561268.html)
-	7. [线性表（顺序存储）插入和删除节点的平均移动次数计算 - 麦克斯的园丁 - 博客园](https://www.cnblogs.com/hsiangyu-meng/p/16649631.html)
-	8. [小学数学—计算之等差数列\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1u8411j7Tn)
