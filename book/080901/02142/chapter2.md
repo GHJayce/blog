@@ -120,7 +120,7 @@ typedef struct
 SeqList L; // 定义L为一个顺序表
 ```
 
-例子：
+例如：
 ```c
 const int Maxsize = 7; // 预先定义数组大小
 typedef struct
@@ -253,10 +253,192 @@ void findSeqList(SeqList L, DataType x)
 只需要返回L.length即可
 
 ## 链表
-- 链式存储：各个结点在内存中的存储位置并不连续，可以存放在不同位置，指针表示数据元素之间的逻辑关系。
-- 链表：用链式存储实现的线性表，结点之间可以重新链接，链表分为：
-	- 单链表：一个链表结点由一个数据元素和一个指针构成。
-	- 循环链表：
-	- 双向循环链表：
+### 概念
+- 链表的结点：由数据域（数据元素）和指针域或者叫链域（表示数据元素之间的逻辑关系）组成。
+	- 数据域：相当于火车厢。
+	- 指针域：相当于连接火车厢的车钩。
+- 链式存储：各个结点在内存中的存储位置并不一定连续，逻辑结构中相邻的结点其存储位置不一定相邻。
+- 链表：用链式存储实现的线性表，所有结点通过指针链接形成链表Link List，结点之间可以重新链接。
+	- 单链表：每个结点由一个数据元素和一个指向下一个结点（后继结点）的next指针构成。
+	- 循环链表：单链表的基础上，尾结点的指针指向首结点。
+	- 双向循环链表：循环链表的基础上，每个结点增加一个指向上一个结点（前驱结点）的prio指针。
+- 组成介绍：
+	- head：头指针变量，有两个作用：
+		- 它的值指向链表的第一个结点。
+		- 也可以用来命名链表，例如下图链表称为：表head、head表。
+	- 首结点：链表中第一个数据元素结点。
+	- 尾结点：也称终端结点，指链表中最后一个数据元素结点。
+		- 空指针：尾结点的指针域的值为NULL。
+	- 空链表：head等于NULL，表示链表无任何结点。
+	- 头结点：为了方便运算，在首结点之前增加一个相同类型的结点，如图C)。
+	- 表结点：除了头结点以后的结点。
 
+![单链表、带头结点的单链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/single-link-list.png) 
+### 用类C语言来描述
+```c
+typedef struct node
+{
+	DataType data; // 数据域
+	struct node * next; // 指针域
+} Node, *LinkList;
+```
+例如：
+```c
+typedef struct
+{
+	int num; // 学号
+	char name[8]; // 姓名
+	int age; // 年龄
+} DataType; // 定义结点的类型
+typedef struct node
+{
+	DataType data; // 数据域
+	struct node * next; // 指针域
+} Node, *LinkList; // Node是链表结点的类型
+LinkList head; // 定义一个全局变量，head是链表的名称
+```
+
+### 运算
+#### 初始化
+```c
+LinkList InitiateLinkList() // 建立一个空的单链表
+{
+	LinkList head; // 定义局部变量，头指针
+	head = malloc(sizeof(Node)); // 动态构建一结点，它是头结点
+	head->next = NULL;
+	return head;
+}
+```
+步骤：
+1. 基于`LinkList`结构，构建一个名为head的单链表。
+2. 通过给head分配内存、设置属性，此时head是一个头结点，next指针为NULL，表示链表为空。
+3. 返回这个链表的头结点。
+
+#### 求表长
+```c
+int LengthLinkList(LinkList head) // 求单链表head的长度
+{
+	// 声明一个指向Node对象的名为point的指针变量，它指向head的头结点
+	Node *point = head;
+	int count = 0;
+	while (point->next != NULL)
+	{
+		point = point->next
+		count++;
+	}
+	return count;
+}
+```
+步骤：
+1. 指向head表的头结点。
+2. 初始化count计数。
+3. 从head头结点开始，检查头结点的下一个结点，也就是首结点：
+	1. 结点不为空，此时point变成首结点，计数+1，依次往后检查下一个结点是否为NULL。
+	2. 结点为NULL结束循环。
+4. 返回表长。
+
+#### 读取元素
+```c
+Node *GetLinkList(LinkList head, int no) // 读取序号为第no个结点，读到返回结点指针
+{
+	Node *point;
+	point = head->next;
+	int position = 1;
+	while (point != NULL && position < no)
+	{
+		point = point->next;
+		position++;
+	}
+	if (position == no) {
+		return point;
+	}
+	return NULL;
+}
+```
+步骤：
+1. 声明point指针变量，指向head表的首结点。
+2. 初始化position，也就是从第一个结点（位置1）开始查找。
+3. 检查point结点不能是空的，并且position要小于查找的no。
+	1. 符合条件，表示还没找到，此时point变成下一个结点，position+1，重复步骤3。
+	2. 不符合条件，结束循环，分为两种情况，可能遍历完整个链表都没找到或者提前找到了。
+4. 判断position是否等于no序号：
+	1. 相等，表示已经找到，返回point结点。
+	2. 不相等，表示没有找到，返回NULL值。
+#### 定位
+```c
+int LocateLinkList(LinkList head, DataType x) // 在head表中找到第一个符合x结点的序号
+{
+	Node *locateNode;
+	locateNode = head->next;
+	int no = 1;
+	while (locateNode != NULL && locateNode->data != x)
+	{
+		locateNode = locateNode->next;
+		no++;
+	}
+	if (locateNode == x) {
+		return no;
+	}
+	return 0;
+}
+```
+关键点：
+1. 从首结点开始，当前结点不为空并且不等于要查找的值则继续检查下一个结点：
+	1. 如果提前找到结点locateNode，循环结束。
+	2. 如果遍历完链表依然没找到，locateNode等于尾结点，循环结束。
+2. 比对locateNode和x：
+	1. 相等，就是找到了，返回locateNode所在的序号。
+	2. 不相等，也就是没找到，返回0。
+
+#### 插入
+```c
+void InsertLinkList(LinkList head, DataType x, int no)
+{
+	Node *newNode, *query;
+	if (no == 1) {
+		query = head;
+	} else {
+		query = GetLinkList(head, no-1);
+	}
+	if (query == NULL) {
+		exit("找不到插入的位置");
+	}
+	newNode = malloc(sizeof(Node));
+	newNode->data = x;
+	newNode->next = query->next;
+	query->next = newNode;
+}
+```
+关键点：
+1. 找到要插入位置的前驱结点query：
+	1. 生成一个新的结点newNode，按照Node结构分配内存。
+	2. newNode的next要指向query的next，数据域赋值为x也别忘了。
+	3. query的next指向newNode。
+2. 注意如果插入的位置为1，要做处理，避免取一个非法的前驱结点。
+3. 要对查找插入位置的结果做处理。
+4. 1.2和1.3的步骤不能调换，必须严格执行，不然会丢失query的next结点。
+
+#### 删除
+```c
+void DeleteLinkList(LinkList head, int no)
+{
+	Node *deleteNode, *query;
+	if (no == 1) {
+		query = head;
+	} else {
+		query = GetLinkList(head, no-1);
+	}
+	if (query == NULL || query->next == NULL) {
+		exit("删除的位置错误");
+	}
+	deleteNode = query->next;
+	query->next = deleteNode->next;
+	free(deleteNode);
+}
+```
+关键点：
+1. 和插入有点类似，也得先找到要查删除位置的前驱结点query，当然也要注意非法前驱的处理。
+2. 要对查找删除位置的结果做处理。
+3. 要删除的结点放到临时变量存起来，目的用于free释放内存空间。
+4. 把前驱结点query的next指向删除结点的next即可，如果删除结点是尾结点，那么query的next就是NULL。
 ## 参考
