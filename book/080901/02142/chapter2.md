@@ -276,11 +276,14 @@ void findSeqList(SeqList L, DataType x)
 ![单链表、带头结点的单链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/single-link-list.png) 
 ### 用类C语言来描述
 ```c
-typedef struct node
+typedef struct node // node是结构体的原始名称
 {
 	DataType data; // 数据域
 	struct node * next; // 指针域
 } Node, *LinkList;
+// Node，*LinkList都是结构体的别名，其中
+// Node是指向struct node类型的别名
+// *LinkList是指向Node类型的指针的别名
 ```
 例如：
 ```c
@@ -441,4 +444,31 @@ void DeleteLinkList(LinkList head, int no)
 2. 要对查找删除位置的结果做处理。
 3. 要删除的结点放到临时变量存起来，目的用于free释放内存空间。
 4. 把前驱结点query的next指向删除结点的next即可，如果删除结点是尾结点，那么query的next就是NULL。
+
+#### 创建
+为了方便后续算法演示，这里用一个数组来构建单链表，再简化一下DataType的属性：
+```c
+int nums[6] = {4, 7, 2, 5, 2, 4};
+
+typedef struct
+{
+	int age;
+} DataType;
+```
+结合以上已实现的算法`InitiateLinkList()`和`InsertLinkList()`，实现一个创建链表的算法。
+```c
+LinkList createLinkListByEach(int *arr, int size)
+{
+    LinkList point = InitiateLinkList();
+    for (int i = 0; i < size; i++) {
+        DataType item;
+        item.age = arr[i];
+        InsertLinkList(point, item, i+1);
+    }
+    return point;
+}
+// 调用
+// size自动计算：sizeof(nums) / sizeof(nums[0])，为了方便展示直接写6
+createLinkListByEach(nums, 6);
+```
 ## 参考
