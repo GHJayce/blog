@@ -1,17 +1,17 @@
 ---
-title: "第二章 线性表 - 《数据结构导论》笔记"
+title: 第二章 线性表 - 《数据结构导论》笔记
 date: 2023-08-29T14:46:12+08:00
+updateDate: 2023-09-18T11:42:10+08:00
 slug: book/080901/02142/chapter2
-image:
+image: 
 categories:
-    - 书籍
+  - 书籍
 tags:
-    - 数据结构导论
-    - 计算机科学与技术
-    - 笔记
+  - 数据结构导论
+  - 计算机科学与技术
+  - 笔记
 draft: false
 ---
-
 ## 目录
 
 - [第一章 概论](../chapter1)
@@ -35,7 +35,7 @@ draft: false
 		- 删除
 2. 线性表的顺序存储结构——顺序表
 	1. 概念
-	2. 用类C语言的描述
+	2. 用C语言描述
 	3. 运算实现的关键步骤和算法
 		- 容量
 		- 表长
@@ -53,7 +53,7 @@ draft: false
 		- 首结点
 		- 尾结点
 		- 空链表
-	3. 用类C语言的描述
+	3. 用C语言描述
 	4. 运算实现的关键步骤和算法
 		- 插入
 		- 删除
@@ -63,7 +63,7 @@ draft: false
 5. 顺序表和链表的优缺点、适用场景
 6. 循环链表和双向循环链表
 	1. 特点和结构
-	2. 用类C语言的描述
+	2. 用C语言描述
 	3. 基本运算
 		- 插入
 		- 删除
@@ -108,7 +108,7 @@ draft: false
 - 顺序存储：将结点依次存放在计算机内存中一组连续的存储单元中，逻辑结构中相邻的结点它的存储位置也相邻。
 - 顺序表：用顺序存储实现的线性表，一般使用数组来表示顺序表。
 
-### 用类C语言来描述
+### 用C语言描述
 假设线性表的数据元素的类型为DataType，顺序表的结构定义如下：
 ```c
 const int Maxsize = 100; // 预先定义一个足够大的常数
@@ -138,19 +138,27 @@ SeqList student; // student是顺序表的名称
 ```
 
 ### 运算
+> 以下相关运算的代码已经整理好，放在了[GHBJayce/code-example - sequence list](https://github.com/GHBJayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/sequence-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
 #### 插入
 算法：
 ```c
-void func(SeqList L, DataType x, int no)
+SeqList insertSeqList(SeqList L, DataType x, int no)
 {
-	if (L.length >= Maxsize) exit("表已满");
-	// 等同于：no <= 0 || no >= L.length + 2
-	if (no < 1 || no > L.length + 1) exit("插入位置不正确");
-	for (j = L.length; j >= no; j--) {
-		L.data[j] = L.data[j - 1];
-	}
-	L.data[no - 1] = x;
-	L.length++;
+    if (L.length >= Maxsize) {
+        printf("%s\n", "表已满");
+        exit(EXIT_FAILURE);
+    }
+    // 等同于：no <= 0 || no >= L.length + 2
+    if (no < 1 || no > L.length + 1) {
+        printf("%s\n", "插入位置不正确");
+        exit(EXIT_FAILURE);
+    }
+    for (int i = L.length; i >= no; i--) {
+        L.data[i] = L.data[i - 1];
+    }
+    L.data[no - 1] = x;
+    L.length++;
+    return L;
 }
 ```
 
@@ -189,15 +197,18 @@ void func(SeqList L, DataType x, int no)
 #### 删除
 算法：
 ```c
-void DeleteSeqList(SeqList L, int no)
+SeqList deleteSeqList(SeqList L, int no)
 {
-	// 等同于：no <= 0 || no >= L.length + 1
-	if (no < 1 || no > L.length)
-		exit("非法位置");
-	for (j = no, j < L.length; j++) {
-		L.data[j-1] = L.data[j];
-	}
-	L.length--;
+    // 等同于：no <= 0 || no >= L.length + 1
+    if (no < 1 || no > L.length) {
+        printf("%s\n", "非法位置");
+        exit(EXIT_FAILURE);
+    }
+    for (int i = no; i < L.length; i++) {
+        L.data[i-1] = L.data[i];
+    }
+    L.length--;
+    return L;
 }
 ```
 
@@ -229,16 +240,17 @@ void DeleteSeqList(SeqList L, int no)
 #### 定位
 算法：
 ```c
-void findSeqList(SeqList L, DataType x)
+int locateSeqList(SeqList L, DataType x)
 {
-	int i = 0;
-	while ((i < L.length) && (L.data[i] != x)) {
-		i++;
-	}
-	if (i < L.length) {
-		return i + 1;
-	}
-	return 0;
+    int i = 0;
+    // 为了简化运算，这里只比对DataType里的id
+    while ((i < L.length) && (L.data[i].id != x.id)) {
+        i++;
+    }
+    if (i < L.length) {
+        return i + 1;
+    }
+    return 0;
 }
 ```
 
@@ -274,12 +286,12 @@ void findSeqList(SeqList L, DataType x)
 	- 表结点：除了头结点以后的结点。
 
 ![单链表、带头结点的单链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/single-link-list.png) 
-### 用类C语言来描述
+### 用C语言描述
 ```c
-typedef struct node // node是结构体的原始名称
+typedef struct node
 {
-	DataType data; // 数据域
-	struct node * next; // 指针域
+    DataType data;
+    struct node *next;
 } Node, *LinkList;
 // Node，*LinkList都是结构体的别名，其中
 // Node是指向struct node类型的别名
@@ -293,6 +305,7 @@ typedef struct
 	char name[8]; // 姓名
 	int age; // 年龄
 } DataType; // 定义结点的类型
+
 typedef struct node
 {
 	DataType data; // 数据域
@@ -302,9 +315,10 @@ LinkList head; // 定义一个全局变量，head是链表的名称
 ```
 
 ### 运算
+> 以下相关运算的代码已经整理好，放在了[GHBJayce/code-example - link list](https://github.com/GHBJayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/link-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
 #### 初始化
 ```c
-LinkList InitiateLinkList() // 建立一个空的单链表
+LinkList initLinkList() // 建立一个空的单链表
 {
 	LinkList head; // 定义局部变量，头指针
 	head = malloc(sizeof(Node)); // 动态构建一结点，它是头结点
@@ -319,7 +333,7 @@ LinkList InitiateLinkList() // 建立一个空的单链表
 
 #### 求表长
 ```c
-int LengthLinkList(LinkList head) // 求单链表head的长度
+int lengthLinkList(LinkList head) // 求单链表head的长度
 {
 	// 声明一个指向Node对象的名为point的指针变量，它指向head的头结点
 	Node *point = head;
@@ -342,7 +356,7 @@ int LengthLinkList(LinkList head) // 求单链表head的长度
 
 #### 读取元素
 ```c
-Node *GetLinkList(LinkList head, int no) // 读取序号为第no个结点，读到返回结点指针
+Node *getLinkList(LinkList head, int no) // 读取序号为第no个结点，读到返回结点
 {
 	Node *point;
 	point = head->next;
@@ -369,7 +383,7 @@ Node *GetLinkList(LinkList head, int no) // 读取序号为第no个结点，读�
 	2. 不相等，表示没有找到，返回NULL值。
 #### 定位
 ```c
-int LocateLinkList(LinkList head, DataType x) // 在head表中找到第一个符合x结点的序号
+int locateLinkList(LinkList head, DataType x) // 在head表中找到第一个符合x结点的序号
 {
 	Node *locateNode;
 	locateNode = head->next;
@@ -395,21 +409,23 @@ int LocateLinkList(LinkList head, DataType x) // 在head表中找到第一个符
 
 #### 插入
 ```c
-void InsertLinkList(LinkList head, DataType x, int no)
+LinkList insertLinkList(LinkList head, DataType x, int no)
 {
-	Node *newNode, *query;
-	if (no == 1) {
-		query = head;
-	} else {
-		query = GetLinkList(head, no-1);
-	}
-	if (query == NULL) {
-		exit("找不到插入的位置");
-	}
-	newNode = malloc(sizeof(Node));
-	newNode->data = x;
-	newNode->next = query->next;
-	query->next = newNode;
+    Node *queryNode, *newNode;
+    if (no == 1) {
+        queryNode = head;
+    } else {
+        queryNode = getLinkList(head, no-1);
+    }
+    if (queryNode == NULL) {
+        printf("插入位置有误");
+        exit(EXIT_FAILURE);
+    }
+    newNode = malloc(sizeof(Node));
+    newNode->data = x;
+    newNode->next = queryNode->next;
+    queryNode->next = newNode;
+    return head;
 }
 ```
 关键点：
@@ -423,20 +439,22 @@ void InsertLinkList(LinkList head, DataType x, int no)
 
 #### 删除
 ```c
-void DeleteLinkList(LinkList head, int no)
+LinkList deleteLinkList(LinkList head, int no)
 {
-	Node *deleteNode, *query;
-	if (no == 1) {
-		query = head;
-	} else {
-		query = GetLinkList(head, no-1);
-	}
-	if (query == NULL || query->next == NULL) {
-		exit("删除的位置错误");
-	}
-	deleteNode = query->next;
-	query->next = deleteNode->next;
-	free(deleteNode);
+    Node *deleteNode, *queryNode;
+    if (no == 1) {
+        queryNode = head;
+    } else {
+        queryNode = getLinkList(head, no-1);
+    }
+    if (queryNode == NULL || queryNode->next == NULL) {
+        printf("%s\n", "删除的位置错误");
+        exit(EXIT_FAILURE);
+    }
+    deleteNode = queryNode->next;
+    queryNode->next = deleteNode->next;
+    free(deleteNode);
+    return head;
 }
 ```
 关键点：
@@ -455,20 +473,179 @@ typedef struct
 	int age;
 } DataType;
 ```
-结合以上已实现的算法`InitiateLinkList()`和`InsertLinkList()`，实现一个创建链表的算法。
+结合以上已实现的算法`initLinkList()`和`insertLinkList()`，实现一个创建链表的算法。
 ```c
 LinkList createLinkListByEach(int *arr, int size)
 {
-    LinkList point = InitiateLinkList();
+    LinkList point = initLinkList();
     for (int i = 0; i < size; i++) {
         DataType item;
         item.age = arr[i];
-        InsertLinkList(point, item, i+1);
+        insertLinkList(point, item, i+1);
     }
     return point;
 }
 // 调用
-// size自动计算：sizeof(nums) / sizeof(nums[0])，为了方便展示直接写6
+// 为了方便展示直接写6，size自动计算：sizeof(nums) / sizeof(nums[0])
 createLinkListByEach(nums, 6);
 ```
-## 参考
+缺点：每次插入结点都要遍历一次链表。
+##### 尾插法
+```c
+LinkList createLinkListByTailInsert(int *arr, int size)
+{
+    LinkList head;
+    Node *lastNode, *newNode;
+    head = malloc(sizeof(Node));
+    lastNode = head;
+    for (int i = 0; i < size; i++) {
+        DataType item;
+        item.age = arr[i];
+
+        newNode = malloc(sizeof(Node));
+        newNode->data = item;
+        lastNode->next = newNode;
+        lastNode = newNode;
+    }
+    lastNode->next = NULL;
+    return head;
+}
+```
+优点：每次插入新结点都能从尾结点进行而不需要每次遍历整个链表。
+##### 头插法
+```c
+LinkList createLinkListByHeadInsert(int *arr, int size)
+{
+    LinkList head;
+    Node *newNode;
+    head = malloc(sizeof(Node));
+    head->next = NULL;
+    for (int i = 0; i < size; i++) {
+        DataType item;
+        item.age = arr[i];
+
+        newNode = malloc(sizeof(Node));
+        newNode->data = item;
+        newNode->next = head->next;
+        head->next = newNode;
+    }
+    return head;
+}
+```
+与尾插法算法一样，只是插入新结点是从头结点进行，最终链表的顺序与尾插法相反。
+#### 删除重复结点
+```c
+LinkList removeRepeatLinkList(LinkList head)
+{
+    Node *searchNode; // 要查找的结点
+    Node *checkNode; // 要检查（比对）的结点
+    Node *deleteNode; // 要删除的结点
+    searchNode = head->next; // 从首结点开始
+    while (searchNode != NULL) {
+	// 关键，从首结点开始，循环检查当前结点的下一个结点
+        checkNode = searchNode;
+        while(checkNode->next != NULL) {
+            if (searchNode->data.age == checkNode->next->data.age) {
+                deleteNode = checkNode->next;
+                checkNode->next = deleteNode->next;
+                free(deleteNode);
+            } else {
+                checkNode = checkNode->next;
+            }
+        }
+        searchNode = searchNode->next;
+    }
+    return head;
+}
+```
+关键点：
+1. 从首结点开始遍历，取它的值与下一个结点的值进行比较，找到相等的值进行删除。
+2. `checkNode=searchNode; while(checkNode->next != NULL)`是关键之一。
+
+### 其他链表
+#### 循环链表
+![带头结点的单链表、带尾结点的循环链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/cycle-link-list.png) 
+带尾结点访问首结点的表示方式：`rear->next->next`，运算与单链表类似，不再赘述。
+#### 双向循环链表
+用类C语言来描述：
+```c
+struct dbnode
+{
+	DataType data;
+	struct dbnode *prior, *next;
+}
+typedef struct dbnode *dbpointer;
+typedef dbpointer DLinkList;
+```
+
+双向循环链表和单链表的运算差不多，主要提一下删除和插入运算的差异。
+
+删除算法的关键点：
+```c
+removeNode->prior->next = removeNode->next;
+removeNode->next->prior = removeNode->prior;
+free(removeNode);
+```
+第1行和第2行代码顺序颠倒也可以，不影响最终效果。
+
+插入算法的关键点：
+```c
+newNode->prior = query;
+newNode->next = query->next;
+query->next->prior = newNode;
+query->next = newNode;
+```
+> 注意query是指插入位置的前驱结点，以及这些语句的顺序。
+
+1. 先接好新结点的prior和next指针的指向。
+2. 再将插入位置结点的prior指针指向新结点。
+3. 最后将query结点的next指针指向新结点。
+
+## 顺序表和链表的比较
+### 异同
+1. 存储方式：
+	- 顺序表：
+		1. 使用连续的内存空间来存储结点。
+		2. 需要预先分配存储空间，存储结点个数有上限。
+	- 链表：
+		1. 结点由数据元素和指针组成，指针指向下一个结点，存储在内存空间连不连续都可以。
+		2. 不需要预先分配存储空间，存储结点个数没有上限。
+2. 访问效率：
+	- 顺序表：
+		1. 能根据索引快速定位结点，时间复杂度O(1)。
+		2. 读取结点支持随机访问。
+	- 链表：
+		1. 只能通过遍历链表，从头到尾逐个遍历查找目标结点，时间复杂度O(n)。
+		2. 读取结点不支持随机访问。
+3. 运算（插入和删除）：
+	- 顺序表：
+		1. 插入和删除需要移动后续的结点，以保证结点之间的连续性。
+		2. 插入和删除操作之前需要查找定位，时间复杂度O(n)。
+	- 链表：
+		1. 插入和删除只需要修改结点之间指针的指向关系，不需要移动结点。
+		2. 跟顺序表一样需要查找定位，时间复杂度也是O(n)。
+
+### 优缺点
+- 顺序表：
+	- 优点：
+		1. 随机访问效率高。
+	- 缺点：
+		1. 插入和删除的操作代价高。
+		2. 需要预先分配一块连续的内存空间。
+		3. 存储结点个数有上限。
+- 链表：
+	- 优点：
+		1. 插入和删除的操作代价低。
+		2. 对内存空间控制动态且灵活。
+		3. 存储结点个数没有上限（取决于可用内存空间）。
+	- 缺点：
+		1. 不支持随机访问。
+		2. 相对要占用多一些内存空间来存放指针域。
+
+### 适合场景
+根据上面的优缺点可得知：
+- 顺序表：更适合读多写（插入和删除）少的场景。
+- 链表：更适合写多读少的场景。
+
+## 综合应用
+待补充...
