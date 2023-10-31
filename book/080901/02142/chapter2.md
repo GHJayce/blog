@@ -186,7 +186,7 @@ SeqList insertSeqList(SeqList L, DataType x, int no)
 - 当插入位置是1时，移动次数为n，这个称为末项。
 
 根据移动次数变化的规律可以看出：
-1. 移动次数的计算方式为：`n - no + 1`。
+1. 比较和移动次数的计算方式为：`n - no + 1`。
 2. 可插入的位置有：`n + 1`个。
 3. 这是个[等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)。
 	- 使用[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式可以得出总的移动次数为：$\frac{(n + 1) \times n}{2}$。

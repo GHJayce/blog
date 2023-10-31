@@ -31,8 +31,8 @@ draft: false
 ### 本文涉及知识点
 1. 数学知识
 	1. 乘法分配率
-	2. 对数
-	3. 等差数列、高斯求和
+	2. [对数](https://ghbjayce.github.io/p/subject/math/sequence/logarithm/)
+	3. [等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)、[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)
 
 ## 概要
 1. 数据、数据元素和数据项

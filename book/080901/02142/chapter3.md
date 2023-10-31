@@ -1,7 +1,7 @@
 ---
 title: 第三章 栈、队列和数组 - 《数据结构导论》笔记
 date: 2023-09-18T12:24:10+08:00
-updateDate: 2023-09-25T18:23:50+08:00
+updateDate: 2023-10-16T15:56:56+08:00
 slug: book/080901/02142/chapter3
 image: 
 categories:
@@ -188,7 +188,27 @@ dataType getTop(seqStack *stack)
 ```
 
 ### 双栈
-待补充...
+为了节省空间，可以让两个数据元素类型一致的栈共享同一个一维数组空间，这种做法使一维数组空间构成了双栈。
+
+两个栈的栈底分别设在数组的两端，栈顶分别用top1、top2表示，两个栈分别做进栈运算时，彼此会迎面增长，那么判断为上溢的条件为：$top+1=top2$。
+
+> 上溢条件为什么是top+1？
+> 
+> 假设数组长度为40，0-19是第一个栈的空间范围，20-39是第二个栈的空间范围，而19+1则会超出第一个栈的空间范围，出现上溢。
+
+双栈示意图，待补充..
+
+用C语言表示双栈的数据结构：
+```c
+const int maxSize = 40;
+typedef struct doubleStack
+{
+	dataType data[maxSize];
+	int top1, top2;
+} doubleStack;
+```
+
+双栈运算，待补充..
 
 ### 链栈
 #### 定义
@@ -392,7 +412,7 @@ SQ.front = SQ.front+1;
 
 ![顺序队列的假溢出问题](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/queue/sequence-queue-fake-overflow.png) 
 
-如果在e)的状态下，要做入队列的操作，`SQ.rear`将会超出数组下标的范围，也就是新元素没有办法入队列，但是1-4的位置明明是空的，数组的实际空间并没有沾满，这就是**假溢出**现象。
+如果在e)的状态下，要做入队列的操作，`SQ.rear`将会超出数组下标的范围，也就是新元素没有办法入队列，但是1-4的位置明明是空的，数组的实际空间并没有被占满，这就是**假溢出**现象。
 
 > 另外还有一个问题是，队列空和队列满没有办法区分，就如a)和d)的情况。
 
@@ -405,7 +425,7 @@ SQ.front = SQ.front+1;
 
 ![循环队列、队列满和队列空示意图](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/queue/cycle-queue.png) 
 
-> 有点像MySQL redo log的checkpoint和write pos。
+> 循环队列的环状让我想起了MySQL redo log的checkpoint和write pos。
 
 #### 定义
 > 循环队列相关代码放在了[GHBJayce/code-example - cycle queue](https://github.com/GHBJayce/code-example/tree/efc87b84c0232d1747226820a36fd4e8460466c2/code/c/data-structure/list/queue/cycle/1)中，感兴趣可以clone到本地查看运行结果。
@@ -491,6 +511,10 @@ dataType getHead(cycleQueue *CQ)
     return CQ->data[(CQ->front + 1) % maxSize];
 }
 ```
+
+> 为什么是`CQ->front + 1`？
+> 
+> 上面有提到过，别忘了数组的第0个位置是不使用的，而front默认所指向的位置是0，即front所指向的空间是不存储元素的或者即使有也是已被出队列的元素。
 
 ### 链队列
 再重复一遍，链队列是一个带有头结点的单链表组成，队列首部的指针指向头结点，头指针指向首结点，队列尾部的指针指向尾结点，**队列空的时候，队列首部和尾部的指针均指向头结点**。
@@ -631,8 +655,27 @@ $$loc[i, j] = loc[0, 0] + (n * i + j) * k$$
 待补充...
 #### 特殊矩阵
 ##### 对称矩阵
+如果一个n阶的方阵满足以下条件，则是一个对称矩阵：
+1. $a_{ij} = a_{ji}$
+2. $0 \leq i, j \leq n - 1$
+
 ##### 三角矩阵
 #### 稀疏矩阵
+### 应用
+1、对一个$N{\times}N$阶的矩阵A进行逆置，请设计出算法。
+```c
+void MM(int A[n][n])
+{
+	int i, j, temp;
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < i; j++) {
+			temp = A[i][j];
+			A[i][j] = A[j][i];
+			A[j][i] = temp;
+		}
+	}
+}
+```
 
 ## 综合运用
 
