@@ -2,6 +2,7 @@
 title: Hugo Theme Stack图库是怎么工作的？怎样才能支持外链图片？
 slug: static-site-generator/hugo/hugo-theme-stack-gallery-study
 date: 2023-12-05T11:45:25+08:00
+updateDate: 2023-12-08T19:43:25+08:00
 image: https://ghbjayce.github.io/asset/blog/95b65eb883dd0529MjAyMzEyMDUgMTUyMzI1.png
 categories:
   - 源码阅读
@@ -20,9 +21,9 @@ tags:
 - 图片交互效果：经过图像组件处理以后，在页面进行交互的效果。
 - 文中的相对目录路径，如没有特殊说明，均以一个hugo项目为准，可以参考[我的项目结构](https://github.com/GHBJayce/ghbjayce.github.io)。
 
-文字非常多，几乎没有图片，有干货和细节，请耐心阅读。
+文字非常多，图片很少，大部分是干货和细节，请耐心阅读。
 
-[我只想看改动小且有效的解决方案](#在原基础上支持)。
+> [太多字啦，让我直接看你的解决方案，它最好是改动小且不影响现有的功能](#在原基础上支持)。
 
 ## 背景
 在此之前使用了一段时间[CaiJimmy/hugo-theme-stack](https://github.com/CaiJimmy/hugo-theme-stack)的主题，发现它只支持内链图片生成图像组件，并不支持外链图片，意味着外链图片没有办法在页面内点击图片进行一些交互。
@@ -288,7 +289,7 @@ External images:
 			{{- $image = . -}}
 		{{- end -}}
 	{{- else -}}
-	  {{- errorf "Unable to get remote resource %q, %s" $Permalink .Position -}}
+	  {{- warnf "Unable to get remote resource %q" $Permalink -}}
 	{{- end -}}
 {{- else -}}
 	{{- $image = .Page.Resources.GetMatch (printf "%s" (.Destination | safeURL)) -}}
