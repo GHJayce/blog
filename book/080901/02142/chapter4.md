@@ -156,6 +156,7 @@ draft: false
 5. 由一个根结点和两棵互不相交的左子树和右子树组成，子树之间是有次序关系的，且均是一棵二叉树。
 
 ![二叉树](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/binary-tree/binary-tree.png) 
+
 $$图4.2$$
 ### 性质特征
 二叉树的5个性质特征：
@@ -210,7 +211,9 @@ $$图4.2$$
 
 #### 链式存储
 二叉树最常用的是链式存储结构，其中又分为二叉链表和三叉链表。
+
 ![二叉树的链式存储](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/binary-tree/binary-tree-link-store.png)
+
 其中：
 - lchild表示指向左孩子的指针，即左指针。
 	- 没有左孩子时左指针域的值为NULL。
@@ -403,6 +406,7 @@ binaryTree createByPreInOrder(char preArr[], char inArr[], int preArrMinIndex, i
 ## 树和森林
 ### 树的存储结构
 ![树的存储结构示例图](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/tree-store-structure.png)
+
 $$图4.5$$
 #### 孩子链表表示法
 用C语言表示：

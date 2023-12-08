@@ -2,7 +2,7 @@
 title: "hugo快速上手搭建一个静态博客"
 slug: static-site-generator/hugo/quick-start
 date: 2023-06-20T23:46:50+08:00
-image: https://repository-images.githubusercontent.com/11180687/9d3d8200-abf2-11e9-803c-4cdfde0d22e5
+image: https://ghbjayce.github.io/asset/blog/279a4b3470a817f6MjAyMzEyMDUgMTUzMjI0.png
 categories:
     - 工具
 tags:
