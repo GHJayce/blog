@@ -2,7 +2,7 @@
 title: Hugo Theme Stack图库是怎么工作的？怎样才能支持外链图片？
 slug: static-site-generator/hugo/hugo-theme-stack-gallery-study
 date: 2023-12-05T11:45:25+08:00
-updateDate: 2023-12-08T19:43:25+08:00
+updateDate: 2023-12-08T22:00:00+08:00
 image: https://ghbjayce.github.io/asset/blog/95b65eb883dd0529MjAyMzEyMDUgMTUyMzI1.png
 categories:
   - 源码阅读
@@ -246,7 +246,7 @@ External images:
 3. [.Destination](https://gohugo.io/templates/render-hooks/#image-markdown-example) 获取`[](xxx)`中的xxx链接。
 4. `|` 管道操作符。
 5. [safeURL](https://gohugo.io/functions/safe/url/) 将字符串处理成安全的URL字符串。
-6. [relURL](https://gohugo.io/functions/urls/relurl/) 返回相对URL，例如`image1.jpg`得到`/p/test/image1.jpg`。
+6. [relURL](https://gohugo.io/functions/urls/relurl/) 返回相对URL，例如`http://xxx.com/p/test/image1.jpg`得到`/p/test/image1.jpg`。
 7. [.PlainText](https://gohugo.io/templates/render-hooks/#context-passed-to-render-link-and-render-image) 获取`[](xxx "text")`中的text。
 8. [safeHTML](https://gohugo.io/functions/safe/html/) 将字符串处理成安全的HTML字符串。
 9. `ne` 比较两个值是否相等。
@@ -270,14 +270,20 @@ External images:
 
 ### 解决方案
 #### 在原基础上支持
-我在源文件的基础上，增加了`resources.GetRemote`获取外链图片的部分，并且在`hugo.yaml`中增加了一个`params.render.image.extranelLink.enabled`开关进行控制，是否启用外链图片的逻辑。
 
-直接给出我的改动：
+##### 效果
+先来看效果，经过我几天简单测试和使用下来，在文章内使用内链图片和外链图片，均能够生成图像库组件的交互效果。
+
+![img1](https://ghbjayce.github.io/asset/blog/593a79ef8bb8fcfeMjAyMzEyMDggMTIyMjE3.jpeg) ![img2](https://ghbjayce.github.io/asset/blog/bdebad2e7a5ec61eMjAyMzEyMDggMTIyMjM2.jpeg) ![img3](https://ghbjayce.github.io/asset/blog/7db5aca65803cb87MjAyMzEyMDggMTIyMjU0.jpeg)
+
+##### 我的改动
+
+我在源文件的基础上，增加了`resources.GetRemote`获取外链图片的部分，并且在`hugo.yaml`中增加了一个`params.render.image.extranelLink.enabled`开关进行控制，是否启用外链图片的逻辑。
 
 1、`layouts/_default/_markup/render-image.html`
 
 ```html
-{{- $Permalink := .Destination | relURL | safeURL -}}
+{{- $Permalink := .Destination | safeURL -}}
 {{- $image := "" -}}
 
 {{- if and (hasPrefix $Permalink "http") (default false .Page.Site.Params.render.image.extranelLink.enabled) -}}
@@ -292,7 +298,7 @@ External images:
 	  {{- warnf "Unable to get remote resource %q" $Permalink -}}
 	{{- end -}}
 {{- else -}}
-	{{- $image = .Page.Resources.GetMatch (printf "%s" (.Destination | safeURL)) -}}
+	{{- $image = .Page.Resources.GetMatch (printf "%s" $Permalink) -}}
 	{{- if $image -}}
 		{{- $Permalink = $image.RelPermalink -}}
 	{{- end -}}
@@ -349,13 +355,6 @@ params:
 				enabled: true
 ```
 
-##### 效果
-经过我几天简单测试和使用下来，在文章内使用内链图片和外链图片，均能够生成图像库组件的交互效果。
-
-来看外链图片效果：
-
-![img1](https://ghbjayce.github.io/asset/blog/593a79ef8bb8fcfeMjAyMzEyMDggMTIyMjE3.jpeg) ![img2](https://ghbjayce.github.io/asset/blog/bdebad2e7a5ec61eMjAyMzEyMDggMTIyMjM2.jpeg) ![img3](https://ghbjayce.github.io/asset/blog/7db5aca65803cb87MjAyMzEyMDggMTIyMjU0.jpeg)
-
 ##### 发现的问题
 1、问题NQ1：
 
@@ -389,16 +388,16 @@ ERROR 2023/12/05 21:17:31 render of "page" failed: "/project/themes/hugo-theme-s
 有三种解决办法：
 1. 解决掉外链图片访问慢的问题。
 2. 在平常写文章的时候，把`params.render.image.extranelLink.enabled`关闭，没错外链图片没有交互效果了，但你只是想写文章而已，写完以后可以再打开。
-3. 不解决，它只会影响到启动的时候而已，因为访问图片的目的只是拿到图片的宽高并且加到img属性中，你大可以挑一个网络顺畅的时刻去做这件事，而且在此之后再启动时它会使用缓存，影响很小，且不会对构建以后有影响，顶多没有图片交互效果而已。
+3. 不需要解决，大可以挑一个网络顺畅的时刻去做这件事，之后再启动时它会使用缓存，启动会很快，也就首次成功启动会受影响而已。
 
 ---
 
 总结一下：
 - NQ1：内联图片不支持图片交互效果，这在我改动之前就已经存在的问题。
-- NQ2：`hugo server`启动时会有影响，但外链图片访问足够快的情况下，不成问题。
-	- 平时写文章不用时可以关闭，需要用时再打开。
+- NQ2：`hugo server`首次启动时会有影响，但外链图片访问足够快的情况下，不成问题，唯一需要处理的是外链图片超时的问题，解决方案如下：
 	- 解决掉图片访问缓慢的问题。
-	- 不要忘了它在下次启动的时候会有缓存处理。
+	- 平时写文章不用时可以关闭，需要用时再打开。
+	- 挑网络顺畅的时候完成首次启动，之后的启动都会走缓存，启动会非常快。
 
 #### 更换组件
 这个我就不展开了，因为解决方案一已经能够满足我的需求了，除非你想内联图片也需要图片交互效果，并且能够彻底解决掉启动缓慢的问题。
@@ -408,4 +407,4 @@ ERROR 2023/12/05 21:17:31 render of "page" failed: "/project/themes/hugo-theme-s
 > 届时我将会采用[fengyuanchen/viewerjs](https://github.com/fengyuanchen/viewerjs)的组件。
 
 ## 致谢
-能看完这篇文章不容易，感谢你的耐心。
+能看完这篇文章很不容易，为你的耐心鼓掌。
