@@ -138,7 +138,7 @@ SeqList student; // student是顺序表的名称
 ```
 
 ### 运算
-> 以下相关运算的代码已经整理好，放在了[GHBJayce/code-example - sequence list](https://github.com/GHBJayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/sequence-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
+> 以下相关运算的代码已经整理好，放在了[ghjayce/code-example - sequence list](https://github.com/ghjayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/sequence-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
 #### 插入
 算法：
 ```c
@@ -188,8 +188,8 @@ SeqList insertSeqList(SeqList L, DataType x, int no)
 根据移动次数变化的规律可以看出：
 1. 比较和移动次数的计算方式为：`n - no + 1`。
 2. 可插入的位置有：`n + 1`个。
-3. 这是个[等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)。
-	- 使用[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式可以得出总的移动次数为：$\frac{(n + 1) \times n}{2}$。
+3. 这是个[等差数列](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/)。
+	- 使用[高斯求和](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式可以得出总的移动次数为：$\frac{(n + 1) \times n}{2}$。
 	- 因此平均移动次数：$\frac{总移动次数}{可插入位置}$也就是$\frac{\frac{(n + 1) \times n}{2}}{n + 1}$约为$\frac{n}{2}$。
 
 > 如果我有理解错平均移动次数，请大佬随时斧正，<a href="mailto:jaycedeng@outlook.com" target="_blank" class="link">联系我</a>。
@@ -231,8 +231,8 @@ SeqList deleteSeqList(SeqList L, int no)
 根据规律得出：
 - 移动次数的计算方式：`n - no`。
 - 可删除的位置有：`n`个。
-- 同样是[等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)。
-	- 使用[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式得出总的移动次数：$\frac{(0 + n - 1) \times n}{2}$。
+- 同样是[等差数列](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/)。
+	- 使用[高斯求和](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/#求和)公式得出总的移动次数：$\frac{(0 + n - 1) \times n}{2}$。
 	- 平均移动次数：$\frac{总移动次数}{可删除的位置}$也就是$\frac{\frac{(0 + n - 1) \times n}{2}}{n}$约为$\frac{n-1}{2}$。
 
 > 如果我有理解错平均移动次数，请大佬随时斧正，<a href="mailto:jaycedeng@outlook.com" target="_blank" class="link">联系我</a>。
@@ -285,7 +285,8 @@ int locateSeqList(SeqList L, DataType x)
 	- 头结点：为了方便运算，在首结点之前增加一个相同类型的结点，如图C)。
 	- 表结点：除了头结点以后的结点。
 
-![单链表、带头结点的单链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/single-link-list.png) 
+![单链表、带头结点的单链表](https://ghjayce.github.io/asset/blog/P4uZrja3M85o6utKpTl2MjAyNDAyMjVfMTUzNTI4.png "single-link-list")
+
 ### 用C语言描述
 ```c
 typedef struct node
@@ -315,7 +316,7 @@ LinkList head; // 定义一个全局变量，head是链表的名称
 ```
 
 ### 运算
-> 以下相关运算的代码已经整理好，放在了[GHBJayce/code-example - link list](https://github.com/GHBJayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/link-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
+> 以下相关运算的代码已经整理好，放在了[ghjayce/code-example - link list](https://github.com/ghjayce/code-example/blob/4b3a95b8d059b5d3c8af1674769d20d9e5a45d69/code/c/data-structure/list/link-list/1/readme.md)中，感兴趣的话可以clone到本地查看运行结果。
 #### 初始化
 ```c
 LinkList initLinkList() // 建立一个空的单链表
@@ -564,7 +565,9 @@ LinkList removeRepeatLinkList(LinkList head)
 
 ### 其他链表
 #### 循环链表
-![带头结点的单链表、带尾结点的循环链表](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/link-list/cycle-link-list.png) 
+
+![带头结点的单链表、带尾结点的循环链表](https://ghjayce.github.io/asset/blog/1y1u7e76cpUEnFJm4rUzMjAyNDAyMjVfMTUzMjI5.png "cycle-link-list") 
+
 带尾结点访问首结点的表示方式：`rear->next->next`，运算与单链表类似，不再赘述。
 #### 双向循环链表
 用类C语言来描述：

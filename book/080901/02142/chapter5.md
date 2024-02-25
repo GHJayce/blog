@@ -39,7 +39,8 @@ draft: false
 2. 如何在计算机中存储数据？
 3. 解决问题的算法是什么？
 
-![用图描述通信网络的问题](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/graph/graph-application.png)
+![用图描述通信网络的问题](https://ghjayce.github.io/asset/blog/mGzlbAiL2SvMpGZTAb4EMjAyNDAyMjVfMTU1MDA4.png "graph-application")
+
 $$图1$$
 
 - 顶点：即上图的圆圈。
@@ -53,7 +54,8 @@ $$图1$$
 - 带权图：每条边都带有权的图。
 	- 如图1a)。
 
-![用图描述通信网络的问题](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/graph/graph-term.png)
+![用图描述通信网络的问题](https://ghjayce.github.io/asset/blog/qRDDXvhQRi7OFJ0NMY9uMjAyNDAyMjVfMTU1MDU0.png "graph-term")
+
 $$图2$$
 
 图Graph由两个集合V和E组成，记为$G=(V, E)$，其中：

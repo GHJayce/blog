@@ -3,7 +3,7 @@ title: Hugo Theme Stack图库是怎么工作的？怎样才能支持外链图片
 slug: static-site-generator/hugo/hugo-theme-stack-gallery-study
 date: 2023-12-05T11:45:25+08:00
 updateDate: 2023-12-08T22:00:00+08:00
-image: https://ghbjayce.github.io/asset/blog/95b65eb883dd0529MjAyMzEyMDUgMTUyMzI1.png
+image: https://ghjayce.github.io/asset/blog/z4EOqI2zCdlD5ce5EawUMjAyNDAyMjVfMTU1MjIy.png
 categories:
   - 源码阅读
 tags:
@@ -19,7 +19,7 @@ tags:
 - 内联图片：文字和图片处于同一行。
 - 图像组件：将图片处理成在页面中可以进行交互的组件。
 - 图片交互效果：经过图像组件处理以后，在页面进行交互的效果。
-- 文中的相对目录路径，如没有特殊说明，均以一个hugo项目为准，可以参考[我的项目结构](https://github.com/GHBJayce/ghbjayce.github.io)。
+- 文中的相对目录路径，如没有特殊说明，均以一个hugo项目为准，可以参考[我的项目结构](https://github.com/ghjayce/ghjayce.github.io)。
 
 文字非常多，图片很少，大部分是干货和细节，请耐心阅读。
 
@@ -274,7 +274,7 @@ External images:
 ##### 效果
 先来看效果，经过我几天简单测试和使用下来，在文章内使用内链图片和外链图片，均能够生成图像库组件的交互效果。
 
-![img1](https://ghbjayce.github.io/asset/blog/593a79ef8bb8fcfeMjAyMzEyMDggMTIyMjE3.jpeg) ![img2](https://ghbjayce.github.io/asset/blog/bdebad2e7a5ec61eMjAyMzEyMDggMTIyMjM2.jpeg) ![img3](https://ghbjayce.github.io/asset/blog/7db5aca65803cb87MjAyMzEyMDggMTIyMjU0.jpeg)
+![img1](https://ghjayce.github.io/asset/blog/HnUsY5Hf9lLX1nmKPLazMjAyNDAyMjVfMTU1MzI4.jpeg) ![img2](https://ghjayce.github.io/asset/blog/WZDBSq3tYO5AFPNAtH48MjAyNDAyMjVfMTU1MzU4.jpeg) ![img3](https://ghjayce.github.io/asset/blog/U1FCVUf9hsdEiUyVyzSIMjAyNDAyMjVfMTU1NDI5.jpeg)
 
 ##### 我的改动
 

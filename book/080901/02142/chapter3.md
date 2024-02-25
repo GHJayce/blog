@@ -110,7 +110,7 @@ draft: false
 
 ### 顺序栈
 #### 定义
-> 顺序栈相关代码放在了[GHBJayce/code-example - sequence stack](https://github.com/GHBJayce/code-example/tree/main/code/c/data-structure/list/stack/sequence/1)中，感兴趣可以clone到本地查看运行结果。
+> 顺序栈相关代码放在了[ghjayce/code-example - sequence stack](https://github.com/ghjayce/code-example/tree/main/code/c/data-structure/list/stack/sequence/1)中，感兴趣可以clone到本地查看运行结果。
 
 ```c
 const int maxSize=10; // 顺序栈的容量
@@ -212,7 +212,7 @@ typedef struct doubleStack
 
 ### 链栈
 #### 定义
-> 链栈相关代码放在了[GHBJayce/code-example - link stack](https://github.com/GHBJayce/code-example/tree/5dcbf53aebbc1141bff179a4e7571c43956b31ef/code/c/data-structure/list/stack/link/1)中，感兴趣可以clone到本地查看运行结果。
+> 链栈相关代码放在了[ghjayce/code-example - link stack](https://github.com/ghjayce/code-example/tree/5dcbf53aebbc1141bff179a4e7571c43956b31ef/code/c/data-structure/list/stack/link/1)中，感兴趣可以clone到本地查看运行结果。
 
 ```c
 typedef struct
@@ -410,7 +410,7 @@ SQ.front = SQ.front+1;
 - d)为出队列20、30、40、50后的队列，`SQ.rear`为4，`SQ.front`为4。
 - e)为入队列60后，`SQ.rear`为5，`SQ.front`为4。
 
-![顺序队列的假溢出问题](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/queue/sequence-queue-fake-overflow.png) 
+![顺序队列的假溢出问题](https://ghjayce.github.io/asset/blog/qMvUcsAjIUeMbD8OwgsqMjAyNDAyMjVfMTUzNzM0.png "sequence-queue-fake-overflow") 
 
 如果在e)的状态下，要做入队列的操作，`SQ.rear`将会超出数组下标的范围，也就是新元素没有办法入队列，但是1-4的位置明明是空的，数组的实际空间并没有被占满，这就是**假溢出**现象。
 
@@ -423,12 +423,12 @@ SQ.front = SQ.front+1;
 1. 为队列另设一个标志，也就是多加一个变量用作区分。
 2. 队列少用一个元素空间，当只剩最后一个空间时就认为队列满，也就是`CQ.rear`差一步就要追上`CQ.front`，如图b)，书中采用了该解决方法。
 
-![循环队列、队列满和队列空示意图](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/list/queue/cycle-queue.png) 
+![循环队列、队列满和队列空示意图](https://ghjayce.github.io/asset/blog/2BGTtRqzHEArsVspXmzUMjAyNDAyMjVfMTUzODM4.png "cycle-queue") 
 
 > 循环队列的环状让我想起了MySQL redo log的checkpoint和write pos。
 
 #### 定义
-> 循环队列相关代码放在了[GHBJayce/code-example - cycle queue](https://github.com/GHBJayce/code-example/tree/efc87b84c0232d1747226820a36fd4e8460466c2/code/c/data-structure/list/queue/cycle/1)中，感兴趣可以clone到本地查看运行结果。
+> 循环队列相关代码放在了[ghjayce/code-example - cycle queue](https://github.com/ghjayce/code-example/tree/efc87b84c0232d1747226820a36fd4e8460466c2/code/c/data-structure/list/queue/cycle/1)中，感兴趣可以clone到本地查看运行结果。
 
 ```c
 typedef struct cycleQueue
@@ -521,7 +521,7 @@ dataType getHead(cycleQueue *CQ)
 
 链接的实现需要动态申请内存空间，所以不会出现队列满的情况。
 #### 定义
-> 链队列相关代码放在了[GHBJayce/code-example - link queue](https://github.com/GHBJayce/code-example/tree/efc87b84c0232d1747226820a36fd4e8460466c2/code/c/data-structure/list/queue/link/1)中，感兴趣可以clone到本地查看运行结果。
+> 链队列相关代码放在了[ghjayce/code-example - link queue](https://github.com/ghjayce/code-example/tree/efc87b84c0232d1747226820a36fd4e8460466c2/code/c/data-structure/list/queue/link/1)中，感兴趣可以clone到本地查看运行结果。
 
 ```c
 typedef struct

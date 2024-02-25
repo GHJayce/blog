@@ -2,7 +2,7 @@
 title: "hugo快速上手搭建一个静态博客"
 slug: static-site-generator/hugo/quick-start
 date: 2023-06-20T23:46:50+08:00
-image: https://ghbjayce.github.io/asset/blog/279a4b3470a817f6MjAyMzEyMDUgMTUzMjI0.png
+image: https://ghjayce.github.io/asset/blog/hYbelawEIwhaejxWE2RNMjAyNDAyMjVfMTU1NTA2.png
 categories:
     - 工具
 tags:
@@ -57,7 +57,7 @@ hugo new site your-project-name
 cd your-project-name
 git init
 ```
-> 由于我已经有`git`项目`ghbjayce.github.io`，里面没有任何东西，所以这里我使用了`hugo new site GHBJayce --force`，既不影响`hugo`的生成又不影响`git`的项目。
+> 由于我已经有`git`项目`ghjayce.github.io`，里面没有任何东西，所以这里我使用了`hugo new site ghjayce --force`，既不影响`hugo`的生成又不影响`git`的项目。
 
 执行完以后，你会得到以下的目录结构：
 ```

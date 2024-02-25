@@ -25,7 +25,7 @@ draft: false
 ## 阅读说明
 ### 涉及知识点
 - 数学知识
-	- [对数](https://ghbjayce.github.io/p/subject/math/sequence/logarithm/)
+	- [对数](https://ghjayce.github.io/p/subject/math/sequence/logarithm/)
 
 ## 概要
 1. 树
@@ -77,7 +77,7 @@ draft: false
 
 特征：树形结构结点之间具有一对多的关系，一个结点可以有一个或多个直接后继。
 
-![什么是树？](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/tree.png) 
+![什么是树？](https://ghjayce.github.io/asset/blog/spkdu2ZEy2QZwqcpUbdHMjAyNDAyMjVfMTU0MDQx.png "tree") 
 
 - 双亲：指父结点，parent node翻译过来的意思。
 	- 例，如图a)：
@@ -155,7 +155,7 @@ draft: false
 4. 左子树为空。
 5. 由一个根结点和两棵互不相交的左子树和右子树组成，子树之间是有次序关系的，且均是一棵二叉树。
 
-![二叉树](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/binary-tree/binary-tree.png) 
+![二叉树](https://ghjayce.github.io/asset/blog/hlscD7f58TUm3T55ZxEIMjAyNDAyMjVfMTU0MjIy.png "binary-tree") 
 
 $$图4.2$$
 ### 性质特征
@@ -172,7 +172,7 @@ $$图4.2$$
 
 **完全二叉树**：如果对满二叉树按从上到下，从左到右的顺序编号，并在树的最后一层删去部分结点（最后一层至少还剩一个结点），删完以后整棵树的结点还是顺序的排列，这就是棵完全二叉树，其性质有：
 - 性质4：**含有n个结点的完全二叉树的深度为$⌊log_2n⌋+1$**。
-	- 其中`⌊x⌋`表示不大于x的最大整数，即向下取整函数，指⌊$log_2n$⌋，$log_2n$是对数，[什么是对数？](https://ghbjayce.github.io/p/subject/math/sequence/logarithm/)
+	- 其中`⌊x⌋`表示不大于x的最大整数，即向下取整函数，指⌊$log_2n$⌋，$log_2n$是对数，[什么是对数？](https://ghjayce.github.io/p/subject/math/sequence/logarithm/)
 	- 例如上图b)，共有10个结点，即⌊log<sub>2</sub>10⌋+1，对数结果是`3.32..`向下取整后是3，最终深度是4。
 - 性质5：**按上面完全二叉树的定义对结点进行顺序编号，对任意一编号为i(1 ≤ i ≤ n)的结点x，性质有**：
 	- 若`i = 1`，结点x是根。
@@ -205,14 +205,14 @@ $$图4.2$$
 	2. 对不存在的结点的位置可增设虚拟结点（阴影表示）的方式，如下图e)。
 	3. 对应虚拟结点下标的位置使用特殊记号∧表示。
 
-![完全二叉树的顺序存储](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/binary-tree/binary-tree-sequence-store.png)
+![完全二叉树的顺序存储](https://ghjayce.github.io/asset/blog/n4LTWDMnPdgKdymM20F9MjAyNDAyMjVfMTU0MzUw.png "binary-tree-sequence-store")
 
 非完全二叉树的顺序存储虽然可以用转换完全二叉树，以完全二叉树的顺序存储进行处理，这样只要是一棵二叉树（不管是哪种类型）都能够用同一种运算方式进行处理，**但这种方法最大的缺点是造成了空间的浪费**。
 
 #### 链式存储
 二叉树最常用的是链式存储结构，其中又分为二叉链表和三叉链表。
 
-![二叉树的链式存储](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/binary-tree/binary-tree-link-store.png)
+![二叉树的链式存储](https://ghjayce.github.io/asset/blog/Ro3LJ2kEYGY7ZsaykKa3MjAyNDAyMjVfMTU0NDM4.png "binary-tree-link-store")
 
 其中：
 - lchild表示指向左孩子的指针，即左指针。
@@ -405,7 +405,7 @@ binaryTree createByPreInOrder(char preArr[], char inArr[], int preArrMinIndex, i
 
 ## 树和森林
 ### 树的存储结构
-![树的存储结构示例图](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/tree-store-structure.png)
+![树的存储结构示例图](https://ghjayce.github.io/asset/blog/jH0sxIct2yzmRztDnKApMjAyNDAyMjVfMTU0NjE5.png "tree-store-structure")
 
 $$图4.5$$
 #### 孩子链表表示法
@@ -615,7 +615,7 @@ SUM = (N × 0.2 × 2) + (N × 0.3 × 2) + (N × 0.25 × 2) + (N × 0.25 × 2)
 	- 如果是，继续重复步骤2。
 	- **直到只剩下一棵二叉树，这棵二叉树就是哈夫曼树**，如图d)。
 
-![哈夫曼树构建过程](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/huffman-tree/build-huffman-tree-process.png)
+![哈夫曼树构建过程](https://ghjayce.github.io/asset/blog/4OiUp1uzsdo6MZlK1djyMjAyNDAyMjVfMTU0NzIz.png "build-huffman-tree-process")
 
 从中得出规律：
 - 需要经过$n-1$次合并，最终得出一棵哈夫曼树，其中n是指权值的数目，以上面的例子，权值数目为4。
@@ -704,7 +704,7 @@ void huffman(int size, float weigh[], huffmanTree tree)
 | ---- | --- | --- | --- | --- | ------- | --- |
 | 频率 | 1   | 2   | 2   | 3   | 4       | 4   |
 
-![哈夫曼树编码构建过程](https://raw.githubusercontent.com/GHBJayce/Assets/v1.0.0/computer/data-structure/tree/huffman-tree/build-huffman-tree-code-process.png)
+![哈夫曼树编码构建过程](https://ghjayce.github.io/asset/blog/iIZT70Z6hkDVPzfarTAvMjAyNDAyMjVfMTU0ODM4.png "build-huffman-tree-code-process")
 
 经过哈夫曼树编码后，如上图f)，字符对应的编码分别是：
 

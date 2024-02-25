@@ -1,13 +1,13 @@
 ---
-title: "第一章 概论 - 《数据结构导论》笔记"
+title: 第一章 概论 - 《数据结构导论》笔记
 date: 2023-08-20T16:36:20+08:00
 slug: book/080901/02142/chapter1
 categories:
-    - 书籍
+  - 书籍
 tags:
-    - 数据结构导论
-    - 计算机科学与技术
-    - 笔记
+  - 数据结构导论
+  - 计算机科学与技术
+  - 笔记
 draft: false
 ---
 
@@ -31,8 +31,8 @@ draft: false
 ### 本文涉及知识点
 1. 数学知识
 	1. 乘法分配率
-	2. [对数](https://ghbjayce.github.io/p/subject/math/sequence/logarithm/)
-	3. [等差数列](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/)、[高斯求和](https://ghbjayce.github.io/p/subject/math/sequence/arithmetic/#求和)
+	2. [对数](https://ghjayce.github.io/p/subject/math/sequence/logarithm/)
+	3. [等差数列](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/)、[高斯求和](https://ghjayce.github.io/p/subject/math/sequence/arithmetic/#求和)
 
 ## 概要
 1. 数据、数据元素和数据项
@@ -125,7 +125,7 @@ draft: false
 ```c
 int func1(void)
 {
-	printf("hello GHBJayce");
+	printf("hello ghjayce");
 	return 0;
 }
 ```
@@ -136,7 +136,7 @@ int func1(void)
 int func2(int n)
 {
 	for (int i = 0; i < n; ++i) {
-		printf("hello GHBJayce");
+		printf("hello ghjayce");
 	}
 	return 0;
 }
@@ -182,7 +182,7 @@ void func3(int n)
 {
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < n; ++j) {
-			printf("hello GHBJayce");
+			printf("hello ghjayce");
 		}
 	}
 }
@@ -203,7 +203,7 @@ void func(int n)
 {
 	for (int i = 0; i < n; ++1) {
 		for (int j = i; j < n; ++j) {
-			printf("hello GHBJayce");
+			printf("hello ghjayce");
 		}
 	}
 }
@@ -218,7 +218,7 @@ void func(int n)
 void func(int n)
 {
 	for (int i = 1; i < n; i *=2) {
-		printf("hello GHBJayce");
+		printf("hello ghjayce");
 	}
 }
 ```
