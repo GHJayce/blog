@@ -5,10 +5,10 @@ date: 2023-08-30T13:26:26+08:00
 categories:
     - 操作系统
 tags:
-    - android
-    - git
+    - Android
+    - Git
     - 环境安装
-    - termux
+    - Termux
 ---
 ## 前言
 一开始打算在手机上安装git，想到的是安装app，于是各种找，找到了有如：

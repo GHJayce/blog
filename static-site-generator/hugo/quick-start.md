@@ -6,7 +6,7 @@ image: https://ghjayce.github.io/asset/blog/hYbelawEIwhaejxWE2RNMjAyNDAyMjVfMTU1
 categories:
     - 工具
 tags:
-    - hugo
+    - Hugo
     - 静态站点生成器
     - 教程
 ---

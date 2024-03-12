@@ -3,7 +3,7 @@ title: 第六章 查找 - 《数据结构导论》笔记
 date: 2023-10-19T12:23:25+08:00
 updateDate: 2023-09-28T19:30:00+08:00
 slug: book/080901/02142/chapter6
-image: 
+image: https://ghjayce.github.io/asset/blog/k13uqmFROI7ZE6i8K9HpMjAyNDAzMDFfMTM1MDM2.png
 categories:
   - 书籍
 tags:
@@ -14,13 +14,14 @@ draft: false
 ---
 ## 目录
 
-- [第一章 概论](../chapter1)
-- [第二章 线性表](../chapter2)
-- [第三章 栈、队列和数组](../chapter3)
-- [第四章 树和二叉树](../chapter4)
-- [第五章 图](../chapter5)
-- [**第六章 查找**](../chapter6)
-- [第七章 排序](../chapter7)
+- [第一章 概论](../chapter1) <small>P21 ~ 34（13页）</small>
+- [第二章 线性表](../chapter2) <small>P35 ~ 58（23页）</small>
+- [第三章 栈、队列和数组](../chapter3) <small>P59 ~ 92（33页）</small>
+- [第四章 树和二叉树](../chapter4) <small>P93 ~ 128（35页）</small>
+- [第五章 图](../chapter5) <small>P129 ~ 160（31页）</small>
+- [**第六章 查找**](../chapter6) <small>P161 ~ 182（21页）</small>
+- [第七章 排序](../chapter7) <small>P183 ~ 204（27页）</small>
+- [考试重点](../exam-focus)
 
 ## 概要
 

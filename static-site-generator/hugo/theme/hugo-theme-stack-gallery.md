@@ -5,12 +5,13 @@ date: 2023-12-05T11:45:25+08:00
 updateDate: 2023-12-08T22:00:00+08:00
 image: https://ghjayce.github.io/asset/blog/z4EOqI2zCdlD5ce5EawUMjAyNDAyMjVfMTU1MjIy.png
 categories:
-  - 源码阅读
+  - 程序设计语言
 tags:
   - Hugo
   - 静态站点生成器
   - hugo-theme-stack
   - TypeScript
+  - 源码阅读
 ---
 ## 阅读说明
 为了方便文章描述，文中词汇的含义、未提及的场景如下：
