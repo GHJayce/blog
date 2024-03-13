@@ -142,6 +142,8 @@ namespace std {
 
 
 #### 四、函数参数的默认值
+默认值可以是常数，还可以是任何有定义的表达式，但禁止是函数内部的局部变量。
+
 定义：
 ```c++
 void func(int a=11, int b=22, int c=33)
@@ -256,7 +258,7 @@ using namespace std;
 
 int *findLarger(int *num1, int *num2) {
     // *num1是取内存地址的值，num2是内存地址
-    // 结果: num1: 10; num2: 0x7fff363ab310
+    // 结果: *num1: 10; num2: 0x7fff363ab310
     cout << "num1: " << *num1 << "; num2: " << num2 << endl;
     if (*num1 > *num2) {
         return num1;
@@ -276,14 +278,184 @@ int main() {
 ```
 
 #### 六、const与指针共同使用
+const是类型限定符的一种，其作用是限定访问权限。
 
+[类型限定符](https://zh.cppreference.com/w/cpp/language/cv)：
+- `const`，声明变量只读，变量的值不能被修改，例：`const int MAX_VALUE = 100;`。
+- `volatile`，声明变量易变，变量的值可能在未知的情况下发生改变，防止编译器对该变量进行优化，例：`volatile int sensorValue;`。
+- `mutable`，类中的成员变量可以在常量成员函数中被修改。
+```c++
+class example {
+public:
+	mutable int counter;
+	void incrementCounter() const {
+		counter++;
+	}
+}
+```
 
+`const`有三种使用情况：
+1. `const`在符号`*`左侧，表示指针所指数据是常量，数据禁止由本指针改变，但可以通过其他方式修改。指针本身是变量，可以指向其他的内存地址。
+```c++
+string str0 = "hello";
+const string *str1 = &str0;
+cout << str1 << endl; // str1: 0x7ffc033659c0
+
+string str2 = "world";
+str1 = &str2; // 可以
+cout << str1 << endl; // str1: 0x7ffc033659a0
+
+//*str1 = "test"; // 不可以
+```
+2. `const`在符号`*`右侧，表示指针本身是常量，禁止本指针指向其他地址，指针所指的数据可以由本指针修改。
+```c++
+string str0 = "hello";
+string *const str1 = &str0;
+cout << *str1 << endl; // str1: hello
+
+string str2 = "world";
+//str1 = &str2; // 不可以
+
+*str1 = "test"; // 可以
+cout << *str1 << endl; // str1: test
+```
+3. 符号`*`左右都有`const`，表示指针本身和所指数据都是常量，禁止修改指针本身和修改指针所指数据。
+```c++
+string str0 = "hello";
+const string *const str1 = &str0;
+cout << *str1 << endl; // str1: hello
+
+string str2 = "world";
+//str1 = &str2; // 不可以
+//*str1 = "test"; // 不可以
+```
 
 #### 七、内联函数
+`inline`是声明内联函数。
+```c++
+#include <iostream>
+
+// 内联函数定义
+inline int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int main() {
+    int num1 = 10;
+    int num2 = 20;
+
+	// 在编译期间在这个调用点，将函数的代码插入到这个位置
+    int maxValue = max(num1, num2); // 编译期间，此时并不会产生函数调用
+
+    std::cout << "较大的数字是: " << maxValue << std::endl; // 此时才产生函数调用
+
+    return 0;
+}
+```
 
 #### 八、函数的重载
+重载的目的：使用相同的函数名调用功能相似的函数，减少命名空间的浪费。
+
+重载满足条件：
+1. 形参表中对应的形参类型不同。
+2. 形参表中形参个数不同。
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+int bigger(int x, int y)
+{
+    cout << "int bigger: ";
+    return x > y ? x : y;
+}
+float bigger(float x, float y)
+{
+    cout << "float bigger: ";
+    return x > y ? x : y;
+}
+double bigger(double x, double y)
+{
+    cout << "double bigger: ";
+    return x > y ? x : y;
+}
+double bigger(int x, double y)
+{
+    cout << "double2 bigger: ";
+    return x + y;
+}
+string bigger(string x, string y)
+{
+    cout << "string bigger: ";
+    return x > y ? x : y;
+}
+string bigger(string x, string y, string z)
+{
+    cout << "string2 bigger: ";
+    return x + y > z ? 'yes' : 'no';
+}
+
+int main() {
+    cout << bigger(1, 2) << endl; // int bigger: 2
+    cout << bigger(1.1, 1.2) << endl; // double bigger: 1.2
+    cout << bigger(1.1f, 1.2f) << endl; // float bigger: 1.2
+    cout << bigger("a", "A") << endl; // string bigger: a
+    cout << bigger("A", "B", "C") << endl; // string2 bigger: no
+    cout << bigger(1, 1.2) << endl; // double2 bigger: 2.2
+	return 0;
+}
+```
+
+错误的重载情况
+```c++
+// 二义性情况
+int sum(int x, int y, int z = 0);
+int sum(int x, int y);
+// 编译器不能确定你到底调用的是哪个函数
+sum(1, 2);
+
+// 形参类型和数量都一样，仅返回值不一样，也不足以编译器区分，会报错
+int sum(int x, int y);
+double sum(int x, int y);
+```
 
 #### 九、指针和动态内存分配
+指针定义：
+```c++
+int a = 100;
+int *p = &a; // *表示是一个指针，*p是指针变量
+cout << p << endl; // 内存地址
+cout << *p << endl; // 100
+```
+
+静态内存分配：编译时确定数组空间大小，例：`int arr[10];`
+动态内存分配：内存分配是在程序运行期间进行的，运行期间才能确定占用内存的大小。
+动态内存分配，语句格式：`p = new T`，p表示指针变量，T任意数据类型。
+```c++
+int *p;
+p = new int; // 动态分配4个字节大小的内存空间
+*p = 5; // *p向内存空间写入数值5
+
+// 分配任意大小，语句格式 p = new T[n];
+int *pArr;
+int i = 5;
+pArr = new int[i*20]; // 分配了100个元素的整型数组
+pArr[100]; // 下标越界，超出了范围，编译不报错，也不会提示，运行和使用会得到意料之外的结果。
+```
+动态申请的内存空间需要再使用完以后释放，语法：
+```c++
+delete 指针;
+```
+
+`delete`不能用在非`new`动态申请的内存空间，编译过程不报错不提示，运行时报错。
+
+`delete`释放掉指针所指向的空间后，再访问这个空间时，会得到意料之外的结果。
+
+如果是一个动态分配的数组，语法：
+```c++
+delete []指针;
+```
+如果动态分配了一个数组，但却用delete 指针的方式，编译不报错不提示但实际没有被完全释放
 
 #### 十、用string对象处理字符串
 C++标准模板库中提供了string数据类型，专门用于处理字符串。
@@ -312,7 +484,7 @@ int main()
 - `length()`和`size()`没有区别，都是获取字符长度，前者是后者的别名函数。
 - string类型的字符串必须用双引号包起来，单引号只能用于单个字符。
 - string对象之间可以用`<`、`<=`、`==`、`!=`、`>=`、`>`运算符进行比较，大小的判定标准是按字典序（基于ASCII码）进行的，而且是大小写相关的。
-	- 例如：大写字母的ASCII码小于小写字母的ASCII码，`A`~`Z`的ASCII码是`0x41`~`0x5a`，`a`~`z`是`0x61`~`0x7a`，[ASCII码对照表](https://baike.baidu.com/item/ASCII/309296?fr=ge_ala#3)。
+	- 例如：大写字母的ASCII码小于小写字母的ASCII码，`A`~`Z`的ASCII码是`0x41`~`0x5a`，`a`~`z`是`0x61`~`0x7a`，[ASCII码对照表_百度](https://baike.baidu.com/item/ASCII/309296?fr=ge_ala#3)、[ASCII 码表_cppreference](https://zh.cppreference.com/w/cpp/language/ascii)。
 - string对象、字符之间可以使用`+`运算符进行拼接。
 
 ```c++
