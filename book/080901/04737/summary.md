@@ -541,3 +541,545 @@ int main()
 	return 0;
 }
 ```
+
+
+## 第二章 面向对象的基本概念
+### 第一节 结构化程序设计
+略
+
+### 第二节 面向对象程序设计的概念和特点
+#### 一、面向对象思想的提出
+略
+#### 二、面向对象程序设计的特点
+面向对象的程序设计有4个基本特点：
+- 抽象
+- 封装
+- 继承
+- 多态
+### 第三节 类的初步知识
+#### 一、类的定义
+
+类是用户自定义的数据类型，定义类时系统并不会为类分配存储空间，而是把类看作是一种模板。
+
+- 访问范围说明符，一共有3种：`public`、`private`、`protected`，在类中不限制出现顺序和出现次数。
+- 在C++98标准下，类中声明的任何成员不能使用`auto`、`extern`、`register`关键字进行修饰。
+- 类中的成员变量不能在声明时进行初始化。
+- 类成员函数允许重载。
+
+类定义语法格式：
+```c++
+class 类名
+{
+访问范围说明符:
+	成员变量1
+	成员变量2
+	...
+	成员函数声明1
+	成员函数声明2
+	...
+...
+}
+```
+成员函数既可以在类体内定义，也可以在类体外定义。
+
+如果在类体内定义，默认是内联函数。
+```c++
+class Book
+{
+private:
+	int page;
+public:
+	void nextPage(int p)
+	{
+		page = p;
+	};
+	void prevPage(int p); // 即使在体外定义也要先定义声明
+};
+```
+在类体外定义，关键点给函数名加上`类名::`
+```c++
+void Book::prevPage(int p)
+{
+	page = p;
+}
+```
+
+定义在哪里比较好？
+
+答：函数体代码通常比较长，所以在类体内仅定义成员函数的原型，在体外定义函数体。
+
+#### 二、类的定义示例
+```c++
+#include <iostream>
+using namespace std;
+
+class MyDate
+{
+public:
+	MyDate(); // 构造函数
+	MyDate(int, int, int); // 构造函数重载
+	void setDate(int, int, int);
+public:
+	void setDate(MyDate);
+    void print();
+private:
+	int year, month, day;
+};
+MyDate::MyDate()
+{
+	year = 1970, month = 1, day = 1;
+}
+MyDate::MyDate(int y, int m, int d)
+{
+	setDate(y, m, d);
+}
+void MyDate::setDate(int y, int m, int d)
+{
+	year = y; month = m; day = d;
+	return;
+}
+void MyDate::setDate(MyDate theDate)
+{
+	setDate(theDate.year, theDate.month, theDate.day);
+	return;
+}
+void MyDate::print()
+{
+    cout << year << '/' << month << '/' << day << endl;
+    return;
+}
+
+
+int main() {
+	// 创建类对象
+    MyDate date1 = MyDate(), date2 = MyDate(2024, 3, 21), date3;
+	
+    date1.print();
+    date2.print();
+    date3.print();
+    return 0;
+}
+```
+
+
+### 第四节 类的示例程序剖析
+#### 一、程序结构
+略
+#### 二、成员变量与成员函数的定义
+- 成员变量一般均定义为私有访问权限。
+- 使用类，类型定义的变量称为类的对象，例如：用string对象的变量。
+- 每个对象都有各自的存储空间。
+- 成员函数并非每个对象都各存一份，和普通函数一样，在内存中只有一份。
+
+#### 三、创建类对象的基本形式
+
+创建对象变量的两种基本方式：
+
+方式一：
+```c++
+类名 对象名;
+类名 对象名(参数);
+类名 对象名 = 类名(参数);
+类名 对象名1, 对象名2, ...;
+类名 对象名1(参数), 对象名1(参数), ...;
+```
+创建对象后（运行时），C++会为它分配相应的空间，用来存储对象所有的成员变量，而类中定义的成员函数则被分配到存储空间中的一个公用区域，由该类的所有对象共享。
+
+> 在编译阶段并不会分配内存。
+
+方式二：
+```c++
+// A
+类名 *对象指针名 = new 类名;
+// B
+类名 *对象指针名 = new 类名();
+// C
+类名 *对象指针名 = new 类名(参数);
+```
+用new创建对象时返回的是一个对象指针，这个指针指向本类刚创建的这个对象。C++分配给指针的仅仅是存储指针值的空间，而对象所占用的空间分配在堆上。
+
+> 使用new创建的对象，必须用delete来删除。
+
+- 用A方法创建的对象时，调用无参的构造函数，如果这个构造函数是由编译器为类提供的，则类中成员变量不进行初始化。
+- 用B方法，和上面一样，区别在类中的成员变量会进行初始化。
+
+和基本数据类型一样，还可以声明对象的引用、对象的指针、对象的数组：
+```c++
+类名 &对象引用名 = 对象;
+
+类名 *对象指针名 = 对象的地址;
+
+类名 对象数组名[数组大小];
+```
+
+### 第五节 访问对象的成员
+#### 一、使用对象访问成员变量与调用成员函数
+```c++
+对象名.成员变量名
+对象名.成员函数名(参数表)
+```
+
+
+#### 二、使用指针访问对象的成员
+除了使用`.`的方式，还可以使用指针或引用的方式来访问类成员，如果通过指针访问，将`.`换成`->`。
+```c++
+int main()
+{
+    // 创建类对象
+    MyDate date1;
+
+    MyDate *p = new MyDate(); // 使用 new 关键字动态分配内存并将地址赋给指针
+    MyDate *p2 = &date1; // p2 指针指向 date1
+
+    p->print();
+    p2->print();
+
+    delete p; // 释放动态分配的内存
+
+    return 0;
+}
+```
+
+#### 三、使用引用访问对象的成员
+
+### 第六节 类成员的可访问范围
+#### 一、访问范围说明符的含义
+访问修饰符：
+- `public`公有
+- `private`私有
+- `protected`保护
+
+3种关键字出现的次数和先后次序都没有限制。
+
+如果类中某个成员（变量/函数）没有访问范围说明符，默认是私有成员。
+
+```c++
+class A
+{
+	int m, n;
+public:
+	int a, b;
+	int func1();
+private:
+	int c, d;
+	void func2();
+public:
+	char e;
+	int f;
+	int func3();
+}
+```
+- 公有成员变量有`a`、`b`、`e`、`f`，公有成员函数有`func1`、`func3`。
+- 私有成员变量有`m`、`n`、`c`、`d`，私有成员函数有`func2`。
+
+#### 二、成员的访问
+#### 三、隐藏的作用
+
+设置私有成员的机制叫作”隐藏“。
+
+目的是强制对私有成员变量的访问一定要通过公有成员函数进行。
+
+好处是成员变量类型变动时，只需要更改成员函数即可，否则所有直接访问成员变量的语句都需要修改。
+
+### 第七节 标识符的作用域与可见性
+#### 函数原型作用域
+#### 局部作用域
+#### 类作用域
+#### 命名空间作用域
+
+## 第三章 类和对象进阶
+### 第一节 构造函数
+#### 一、构造函数的作用
+用于给对象进行初始化，实际上是用来为成员变量赋值初值的。
+
+构造函数由程序员编写，如果程序员未编写，由系统自动添加一个不带参数的构造函数。
+
+在对象生成时（任何方式声明/定义时），系统自动调用构造函数，程序员无需主动调用。
+#### 二、构造函数的定义
+在类体外的三种定义形式：
+```c++
+class 类名
+{
+private:
+	x1,
+	x2,
+	...
+	xn
+}
+
+// 形式一
+类名::类名(形参1, 形参2, ..., 形参n): x1(形参1), x2(形参2), ..., xn(形参n) {}
+
+// 形式二
+类名::类名(形参1, 形参2, ..., 形参n)
+{
+	x1 = 形参1;
+	x2 = 形参2;
+	...
+	xn = 形参n;
+}
+
+// 形式三
+类名::类名()
+{
+	x1 = 初始化表达式1;
+	x2 = 初始化表达式2;
+	...
+	xn = 初始化表达式n;
+}
+```
+
+方式一中的`x1(形参1), x2(形参2), ..., xn(形参n)`称为**构造函数初始化列表**。
+
+实例一：
+```c++
+class Math
+{
+protected:
+	int k;
+public:
+	Math(int n=5): k(n)
+	{
+		cout << k << endl;
+	}
+};
+
+Math test(3); // 输出3
+```
+
+实例二：
+```c++
+class MyDate
+{
+public:
+	MyDate(); // 构造函数
+	void setDate(int, int, int);
+public:
+	void setDate(MyDate);
+    void print();
+private:
+	int year, month, day;
+};
+MyDate::MyDate(): year(1970), month(1), day(25) {}
+MyDate::MyDate(int d): year(1970), month(1)
+{
+	day = d;
+}
+MyDate::MyDate(int m, int d): year(1970)
+{
+	month = m;
+	day = d;
+}
+MyDate::MyDate(int y, int m, int d)
+{
+	year = y;
+	month = m;
+	day = d;
+}
+```
+
+错误示例：
+```c++
+// 示例一，编译错误，函数重复定义，函数参数列表式相同的
+myDate::myDate(int d): year(1970), month(1)
+{
+	day = d;
+}
+myDate::myDate(int d): year(1970), day(1)
+{
+	month = d;
+}
+
+// 示例二，编译不提示错误，参数表带入的实参值为最终值
+myDate::myDate(int d): year(1970), day(1)
+{
+	day = d;
+}
+```
+
+#### 三、构造函数的使用
+默认值
+```c++
+class A
+{
+	int a, b;
+public:
+    A(int, int);
+};
+A::A(int k, int j = 2)
+{
+	a = k;
+	b = j;
+    cout << "a:" << a << ";b:" << b << endl;
+};
+A a(3); // a:3;b:2
+```
+
+使用构造函数创建对象指针
+```c++
+MyDate *pd = new MyDate();
+MyDate *pd = new MyDate;
+```
+使用new创建对象时，加不加括号都可以，但处理上有差异。
+- 如果有自定义构造函数，都调用构造函数进行初始化。
+- 如果类中没有自定义构造函数。
+	- 不加括号时，系统只为成员变量分配内存空间，不进行内存的初始化，成员变量的值是随机值。
+	- 加了括号时，系统在为成员变量分配内存的同时，将其初始化为0。
+
+```c++
+// 对象数组
+MyDate A[3]; // 3个元素均调用了无参数的构造函数
+MyDate A[3] = {MyDate(1), MyDate(10, 25), MyDate(1980, 9, 10)}; // 调用有参数构造函数
+```
+
+看看调用了多少次构造函数？
+```c++
+AB a(4), b[3], *p;
+```
+共4次，创建a对象时1次，创建b对象数组时3次，而指针p仅是个声明，并不会调用构造函数。
+
+### 第三节 类的静态成员
+#### 一、静态变量
+#### 二、类的静态成员
+```c++
+
+```
+
+## 第五章 类的继承与派生
+### 一、继承的概念
+通过已有的类建立新类的过程，叫作类的派生。
+
+原来的类称为基类/父类/一般类，新类称为派生类/子类/特殊类。
+
+派生类派生自基类，或继承与基类，也可以说基类派生了派生类。
+
+若派生类中定义了一个与基类同名的成员，成员可以是变量/函数，是允许的：
+- 覆盖（重定义/重写）：在派生类的成员函数中访问这个同名成员（或者通过派生类对象访问）。
+- 隐藏（函数重定义/同名隐藏），对于成员函数，派生类既继承了基类的同名成员函数，又在派生类中重写了这个成语函数。
+	- 隐藏是指使用派生类对象调用这个成语函数时，调用的是派生类的函数，隐藏了基类的成员函数。
+
+### 二、派生类的定义与大小
+#### 派生类的定义
+```c++
+// 定义
+class 派生类名:继承方式说明符 基类名
+{
+	类体
+}
+
+// 实例
+class BaseClass // 基类
+{
+	int v1, v2;
+};
+class DerivedClass:public BaseClass // 派生类
+{
+	int v3;
+}
+```
+
+继承方式说明符是指如何控制基类成员在派生类中的访问属性，有3种：
+- `public`公有继承，常用，基类的私有成员不可访问外，公有和保护成员均可访问。
+- `private`私有继承，基类的私有成员不可访问，公有和保护成员以私有成员出现在派生类中。
+- `protected`保护继承，基类的私有成员不可访问，公有和保护成员以保护成员出现在派生类中。
+
+##### 改变基类成员的访问权限
+```c++
+class BaseClass
+{
+public:
+	int v1, v2;
+	BaseClass(): v1(1), v2(1) {}
+	int temp1() {}
+};
+class DerivedClass:public BaseClass
+{
+// 变成私有成员了
+	int v1;
+	int temp1(){}
+public:
+	DerivedClass(): v1(10) {}
+	void printv() {}
+}
+```
+
+#### 类的大小
+派生类对象占用的存储空间大小 = 基类成员变量占用的存储空间大小 + 派生类对象自身成员占用的存储空间大小。
+
+为变量分配内存时，会进行边界对齐。
+
+> 常见内存对齐是4字节、8字节。
+> - 在32位系统，通常以4字节为基本单位对齐。
+> - 在64位，通常以8字节。
+
+```c++
+class BaseClass
+{
+	int v1, v2;
+	char v4;
+public:
+	int temp1() {}
+};
+class DerivedClass:public BaseClass
+{
+	int v3;
+	int *p;
+public:
+	int temp(){}
+};
+
+sizeof(BaseClass); // 12
+sizeof(DerivedClass); // 24
+```
+- 基类占用9个字节（4+4+1），内存对齐分配12个字节。
+	- int占4个字节 × 2
+	- char占1个字节
+- 派生类占用24个字节（12+4+8），正好对齐。
+	- int × 1
+	- 指针变量64位系统下占8个字节（32位系统减半）。
+
+### 三、继承关系的特殊性
+- 如果基类中有友元类 / 友元函数，派生类不会继承这个友元关系。
+- 如果基类是某个类的友元，友元关系可被继承。
+
+```c++
+#include <iostream>
+using namespace std;
+class another;
+class Base
+{
+private:
+	float x;
+public:
+	void print(const another &K);
+};
+class Derived:public Base
+{
+private:
+	float y;
+};
+class another
+{
+private:
+	int aaa;
+public:
+	another()
+	{
+		aaa = 100;
+	}
+	friend void Base::print(const another &K);
+};
+void Base::print(const another &K)
+{
+	cout << "Base:" << K.aaa << endl;
+}
+int main()
+{
+	Base a;
+	Derived d;
+	another ano;  // aaa 初始化100
+	a.print(ano); // Base:100
+	d.print(ano); // Base:100
+	return 0;
+}
+```
