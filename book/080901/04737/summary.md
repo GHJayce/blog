@@ -139,13 +139,51 @@ namespace std {
 ```
 
 #### 三、强制类型转换运算符
+当不同类型的量进行混合算术运算时，系统自动进行合理的类型转换，比如：
+```cpp
+int k;
+double j=5;
+```
 
+`5*k+j`的值是什么类型？
+
+答：根据C++的类型提升规则，当一个 `int` 类型的值和一个 `double` 类型的值进行算术运算时，`int` 类型的值会被提升（promoted）到 `double` 类型，以便两个操作数类型一致。这是因为 `double` 类型比 `int` 类型更宽泛（numerically wider），所以可以容纳 `int` 类型的值而不会丢失信息。所以值是double类型，`5*k`被提升为double类型和`j`进行相加。
+
+也可以在程序中使用强制类型转换运算符，可以用`static_cast`或者`const_cast`进行转换。
+
+`static_cast`用于将一种数据类型转换成另一种数据类型，格式如下：
+```cpp
+static_cast<类型名>(表达式)
+```
+`static_cast`也可以省略，有4种写法：
+```cpp
+int1 = static_cast<int>(double1);
+int2 = int(double1); // 强制类型转换运算符的新写法
+int2 = (int)double1; // 旧写法
+int2 = double1; // 自动类型转换
+```
+
+`const_cast`用于去除指针和引用的常量性，但不能去除变量的常量性，格式如下：
+```cpp
+const_cast<类型名>(表达式)
+```
+功能是：
+- 将常量指针转化成非常量的指针，并且仍然指向原来的对象；
+- 或是将常量引用转换成非常量的引用，并且仍然指向原来的对象。
 
 #### 四、函数参数的默认值
-默认值可以是常数，还可以是任何有定义的表达式，但禁止是函数内部的局部变量。
+默认值可以是常数，还可以是任何有定义的表达式，**但禁止是函数内部的局部变量**。
+
+C++语言规定，有默认值的形参必须在形参列表的最后。
+- 如果某个形参没有默认值，则它左侧的所有形参都不能有默认值。
+- 在有默认值的形参的右侧，不能出现无默认值的形参。
+
+**在声明函数原型时，可以省略形参的名字，可以只给出它的类型及默认值**。
 
 定义：
 ```cpp
+// a、b、c都称作形参
+// func(形参列表)
 void func(int a=11, int b=22, int c=33)
 {
 }
@@ -163,6 +201,7 @@ void func1(int a, int b=2, int c=3); // 对
 void func2(int a=1, int b, int c=3); // 错
 void func3(int a=1, int b=2, int c); // 错
 
+// 1、22、33这些都称作实参
 func1(1, 22, 33); // 对
 func1(); // 错
 func1(1, 29); // 对
@@ -295,7 +334,7 @@ public:
 ```
 
 `const`有三种使用情况：
-1. `const`在符号`*`左侧，表示指针所指数据是常量，数据禁止由本指针改变，但可以通过其他方式修改。指针本身是变量，可以指向其他的内存地址。
+1. `const`在符号`*`左侧，表示指针所指数据是常量，数据禁止由本指针改变，但可以通过其他方式修改。指针本身是变量，可以指向其他的内存地址。**简记数据是常量**。
 ```cpp
 string str0 = "hello";
 const string *str1 = &str0;
@@ -307,7 +346,7 @@ cout << str1 << endl; // str1: 0x7ffc033659a0
 
 //*str1 = "test"; // 不可以
 ```
-2. `const`在符号`*`右侧，表示指针本身是常量，禁止本指针指向其他地址，指针所指的数据可以由本指针修改。
+2. `const`在符号`*`右侧，表示指针本身是常量，禁止本指针指向其他地址，指针所指的数据可以由本指针修改。**简记指针是常量**。
 ```cpp
 string str0 = "hello";
 string *const str1 = &str0;
@@ -319,7 +358,7 @@ string str2 = "world";
 *str1 = "test"; // 可以
 cout << *str1 << endl; // str1: test
 ```
-3. 符号`*`左右都有`const`，表示指针本身和所指数据都是常量，禁止修改指针本身和修改指针所指数据。
+3. 符号`*`左右都有`const`，表示指针本身和所指数据都是常量，禁止修改指针本身和修改指针所指数据。**简记指针和数据都是常量**。
 ```cpp
 string str0 = "hello";
 const string *const str1 = &str0;
@@ -354,7 +393,7 @@ int main() {
 ```
 
 #### 八、函数的重载
-重载的目的：使用相同的函数名调用功能相似的函数，减少命名空间的浪费。
+重载的目的：**使用相同的函数名调用功能相似的函数，减少命名空间的浪费**。
 
 重载满足条件：
 1. 形参表中对应的形参类型不同。
@@ -453,7 +492,7 @@ delete 指针;
 
 如果是一个动态分配的数组，语法：
 ```cpp
-delete []指针;
+delete[] 指针;
 ```
 如果动态分配了一个数组，但却用delete 指针的方式，编译不报错不提示但实际没有被完全释放
 
@@ -549,7 +588,13 @@ int main()
 
 ### 第二节 面向对象程序设计的概念和特点
 #### 一、面向对象思想的提出
-略
+面向对象技术把问题看成是相互作用的事物的集合，也就是对象的集合。
+
+对象具有两个特性：
+1. 状态，指对象本身的信息，也称为属性。
+2. 行为，指对对象的操作。
+
+对象是类的一个具象，类是对象的一个抽象。
 #### 二、面向对象程序设计的特点
 面向对象的程序设计有4个基本特点：
 - 抽象
@@ -719,9 +764,8 @@ int main() {
 对象名.成员函数名(参数表)
 ```
 
-
 #### 二、使用指针访问对象的成员
-除了使用`.`的方式，还可以使用指针或引用的方式来访问类成员，如果通过指针访问，将`.`换成`->`。
+除了使用`.`的方式，还可以使用指针或引用的方式来访问类成员，**如果通过指针或引用访问，将`.`换成`->`**。
 ```cpp
 int main()
 {
@@ -741,6 +785,7 @@ int main()
 ```
 
 #### 三、使用引用访问对象的成员
+略。
 
 ### 第六节 类成员的可访问范围
 #### 一、访问范围说明符的含义
@@ -773,6 +818,10 @@ public:
 - 私有成员变量有`m`、`n`、`c`、`d`，私有成员函数有`func2`。
 
 #### 二、成员的访问
+- 使用public修饰的成员，既可以在本类内和主函数内访问，也可以在其他类中访问，只要定义了该类的对象即可。
+- 使用private修饰的成员，仅可以在本类内访问。
+- 使用protected修饰的成员，既可以在本类内访问，也可以在子类内访问。
+
 #### 三、隐藏的作用
 
 设置私有成员的机制叫作”隐藏“。
@@ -782,10 +831,48 @@ public:
 好处是成员变量类型变动时，只需要更改成员函数即可，否则所有直接访问成员变量的语句都需要修改。
 
 ### 第七节 标识符的作用域与可见性
+在不同的作用域声明的标识符，可见性有如下规则：
+1. 标识符要声明在前，引用在后。
+2. 在同一个作用域中，不能声明同名的标识符，在没有互相包含关系的不同作用域中声明的同名标识符，互不影响。
+3. 如果存在两个或多个具有包含关系的作用域。
+	- 在外层声明了一个标识符，而内层没有声明同名的标识符，那么此时外层的标识符对内层可见。
+	- 如果在内层声明了一个和外层同名的标识符，则外层的标识符对内层不可见，称为内层标识符隐藏了外层同名标识符，这种机制称为**隐藏规则**，举个例子：。
+
+作用域隐藏规则
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a = 1;
+	cout << a <<endl; // 1
+	for (int i = 0; i < 2; i++)
+	{
+		int a = 2;
+		cout << a << "\n";
+	}
+	cout << a <<endl; // 1
+}
+```
+
 #### 函数原型作用域
+在声明函数原型时形参的作用范围就是函数原型作用域，**这是C++程序中最小的作用域**，例：
+```cpp
+double ares(double radius);
+```
+为什么是最小的呢？因为标识符radius的作用范围就只在函数ares形参列表里，即左右括号之间。
+
 #### 局部作用域
+程序中使用一对花括号括起来的一段程序称为块，作用范围就是在块内，称为局部作用域。
+
 #### 类作用域
+类X的成员m具有类作用域，对m的访问有3种：
+1. 在类X的成员函数中没有声明与m同名的变量（局部作用域标识符），那在该函数内可以直接访问成员m。
+2. 在类体外，不违反m的访问修饰符限定的情况下，可以通过`x.m`，x是类X的对象，或者`X::m`。
+3. 在类体外，不违反m的访问修饰符限定的情况下，可以通过`ptr->m`这样的表达式来访问，ptr为指向类X的一个对象的指针。
+
 #### 命名空间作用域
+略
 
 ## 第三章 类和对象进阶
 介绍的内容：
@@ -961,7 +1048,7 @@ AB a(4), b[3], *p;
 ##### 复制构造函数
 复制构造函数是构造函数的一种，也称为拷贝构造函数，是一种特殊的构造函数，作用是创建对象时用一个已存在的对象，用它的成员变量的值去初始化正在创建的这个对象。
 
-复制构造函数只有一个参数，参数的类型是本类的引用，参数可以是const引用，也可以是非const引用。
+复制构造函数**只有一个参数**，**参数的类型是本类的引用**，参数可以是const引用，也可以是非const引用。
 
 一个类可以写两个复制构造函数，定义如下：
 ```cpp
@@ -1036,8 +1123,14 @@ varE.a = 456;
 varE.print(); // a:456; b:0
 ```
 
-其他会调用到复制构造函数的情况：
-1. 作为函数参数时
+自动调用复制构造函数的3种情况：
+1. 用一个对象去初始化另一个对象时
+```cpp
+类名 对象名2(对象名1);
+// or
+类名 对象名2 = 对象名1;
+```
+2. 作为函数参数时，在调用函数时，会调用实参的复制构造函数来初始化形参，即实参内存地址是A，形参从实参那复制一份数据出来，形参的内存地址是B。
 ```cpp
 // 作为函数形参时，会调用一次复制构造函数，可以对比复制构造函数的类和obj的地址的变化
 void func(TestB obj)
@@ -1047,25 +1140,184 @@ void func(TestB obj)
     obj.print();
 }
 ```
-2. 作为函数返回时
+3. 作为函数返回时，和作为函数参数一样，返回时会调用一次复制构造函数。
 ```cpp
-void func()
+TestB func(TestB obj)
 {
-
+	return obj;
 }
 ```
 
 ##### 类型转换构造函数
+如果构造函数只有一个参数，则可以看作是类型转换构造函数，作用是进行类型的自动转换。
+```cpp
 
+#include <iostream>
+#include <string>
 
+using namespace std;
 
+class Demo
+{
+    int id;
+public:
+    Demo(int i)
+    {
+        id = i;
+        cout << "id=" << id << "构造函数" << endl;
+    }
+    void printDemo();
+    ~Demo()
+    {
+        cout << "id=" << id << "析构函数" << endl;
+    }
+};
+
+void Demo::printDemo()
+{
+    cout << "id=" << id << endl;
+}
+
+int main()
+{
+    Demo d4(4);
+    d4.printDemo();
+    d4 = 6;
+    d4.printDemo();
+    return 0;
+}
+```
+输出结果：
+```
+id=4构造函数
+id=4
+id=6构造函数
+id=6析构函数
+id=6
+id=6析构函数
+```
+
+### 第二节 析构函数
+和构造函数一样，析构函数也是成员函数的一种，**它的名字和类名相同，区别是要在类名前面加`~`字符**。
+
+**析构函数没有参数，也没有返回值。**
+
+**一个类中有且仅有一个析构函数，如果没有定义析构函数，编译器自动生成默认的析构函数，默认的析构函数体为空。**
+
+**析构函数不可以超过1个，不会有重载的析构函数**。
 
 ### 第三节 类的静态成员
 #### 一、静态变量
-#### 二、类的静态成员
-```cpp
+什么是全局变量和局部变量？
+- 全局变量是指在花括号之外声明的变量，作用域范围是全局可见的，即在整个项目文件内都有效。
+- 局部变量是指在块内定义，即花括号内定义的变量。
 
+静态变量分为2种：
+1. 静态全局变量，使用static修饰的全局变量是静态全局变量。作用域范围是，在定义该变量的源文件内有效，项目中的其他源文件中不能使用它。
+2. 静态局部变量，使用static修饰的局部变量是静态局部变量，**具有局部作用域，但却有全局生存期，即静态局部变量在程序的整个运行期间都存在，它占据的空间一直到程序结束时才释放**。
+
+静态变量均存储在全局数据区，静态局部变量只执行一次初始化，如果程序未显示给出初始值，则相当于初始化为0，如果显示给出初始值，则在该静态变量所在块第一次执行时完成初始化。
+
+#### 二、类的静态成员
+类的静态成员有2种：
+1. 静态成员变量
+2. 静态成员函数
+
+在类体内定义类的成员时，在前面加上`static`关键字就是静态成员了。
+
+类的静态成员被类的所有对象共享，不论有多少对象存在，静态成员都只有一份保存在公用内存中，对于静态成员变量，各对象看到的值都是一样的。
+
+定义静态成员注意点：
+- **在类体内先声明静态变量，然后再到类体外定义静态变量的初始值，不能直接在类体内赋值**。
+- 在类体外定义静态成员变量初值时，前面不能加`static`关键字，避免和一般的全局静态变量混淆，类体外静态成员函数也一样。
+
+访问类静态成员有3种方式（注意区别于访问类成员仅能使用对象名或者对象指针作为前缀是不一样的）：
+```cpp
+类名::静态成员名
+// or
+类名.静态成员名
+// or
+对象指针->静态成员名
 ```
+
+### 第四节 变量及对象的生存期和作用域
+略，后补
+#### 一、变量的生存期和作用域
+#### 二、类对象的生存期和作用域
+
+
+### 第五节 常量成员和常引用成员
+`const`的修饰的含义是常量，作用是定义了以后不能再修改。
+
+在类中，可以用`const`关键字定义成员变量、成员函数和类的对象。
+
+**类的常量成员变量必须进行初始化，而且只能在构造函数的成员初始化列表的方式进行**，例如：
+```cpp
+class A
+{
+	const int x;
+	const int y;
+public:
+	A(): x(100), y(200)
+	{
+	}
+}
+```
+
+使用const修饰的函数称为常量函数，格式如下：
+```cpp
+返回类型 函数名(形参表) const;
+```
+
+定义类的对象时，前面加`const`，则对该对象称为常量对象，例如：
+```cpp
+const A a(); // a就是常量对象
+```
+常量对象只能调用常量函数，而且常量对象中的各个属性值均不能修改。
+
+
+### 第六节 成员对象和封闭类
+略，后补
+#### 一、封闭类构造函数的初始化列表
+#### 二、封闭类的复制构造函数
+
+
+### 第七节 友元
+#### 一、友元
+#### 二、友元函数
+#### 三、友元类
+假如声明了类B为类A的友元类，即类B是一个友元类，那么类B中的所有函数都是类A的友元函数，即类B的所有成员函数都可以访问类A的所有成员。
+
+声明格式：
+```cpp
+friend class 类名;
+```
+
+注意点：
+- 友元类的关系是单向的，还是上面的例子，类B是类A的友元类，但类A不是类B的友元类。
+- 友元类的关系不能传递，即类B是类A的友元类，类C是类B的友元类，不等于类C是类A的友元类。
+
+来个例子，方便理解：
+```cpp
+class C
+{
+}
+class B
+{
+	friend class C;
+}
+class A
+{
+	friend class B;
+}
+```
+- 类B的所有成员函数可以访问类A的所有成员，类C的所有成员函数可以访问类B的所有成员，但类C不能访问类A的所有成员。
+- 类A不能访问类B、类C的所有成员。
+
+> 除非确有必要，一般不把整个类声明为友元类，而仅把类中的某些成员函数声明为友元函数。
+
+### 第八节 this指针
+略
 
 
 ## 第四章 运算符重载
@@ -1804,6 +2056,548 @@ class 派生类名 :virtual 派生方式 基类名
 ### 第三节 控制I/O格式
 #### 流操纵符
 
+## 第八章 文件操作
+### 第一节 文件基本概念和文件流类
+#### 一、文件的概念
+从不同的角度来看待文件就可以得到不同的文件分类。
+- C++根据文件数据的编码方式不同分为**文本文件**和**二进制文件**。
+- 根据存取方式不同分为**顺序存取文件**和**随机存取文件**。
+
+从数据存储的角度来说，所有的文件本质上都是一样的，都是由一个个字节组成，归根到底都是0、1字节串。文本文件和二进制文件只是格式不同而已。
+
+计算机将文件看成一个有序排列的字节序列，在文件内部有一个读写文件的**位置指针**，用以记录文件内部正在进行操作的字节位置。操作文件时，系统会自动修改这个位置指针。
+- 顺序存取文件，顾名思义，按照文件中数据的存储次序进行顺序操作，**整个文件的操作过程，将移动位置指针的工作交给系统自动完成**。
+	- 例如：磁带文件。
+- 随机访问文件，就是通过命令移动位置指针直接定位到文件内需要的位置进行数据操作。
+
+文件的基本操作分为**读文件**和**写文件**。
+- **读文件，将文件中的数据读入内存中，称为输入**。
+- **写文件，将内存中的数据存入文件中，称为输出**。
+#### 二、C++文件流类
+流是一个逻辑概念，是对所有外部设备的逻辑抽象。C++的I/O系统将每个外部设备都转换成一个称为流的逻辑设备，由流来完成对不同设备的具体操作。
+
+文件是一个物理概念，代表存储着信息集合的某个外部介质，它是C++语言对具体设备的抽象。
+
+C++也是使用流类对文件进行处理，标准类库中有3个流类用于文件操作，统称为文件流类：
+1. `ifstream`：用于从文件中读取数据。
+2. `ofstream`：从文件中写入数据。
+3. `fstream`：对文件既可以读又可以写。
+
+文件流类关系：
+- 类`ifstream`、类`fstream`都是从类`istream`派生出来的。
+- 类`ofstream`是从类`ostream`派生出来的。
+- `fstream`是同时继承了类`ifstream`和类`ofstream`。
+
+文件操作：打开、读、写、关闭等。
+
+### 第二节 打开和关闭文件
+#### 一、打开文件
+在对文件进行读写操作之前，要先打开文件，有两个目的：
+1. 建立关联。通过指定文件名，建立起文件和文件流对象的关联，以后在对文件进行操作时，可以通过流对象来进行。
+2. 指明文件的**使用方式**和**文件格式**。
+	- 使用方式：只读、只写、既读又写、在文件末尾追加数据。
+	- 文件格式：文本、二进制。
+
+打开文件的两种格式：
+```c++
+// 方式一
+流类名 对象名;
+对象名.open(文件名, 模式);
+
+// 方式二
+流类名 对象名(文件名, 模式);
+```
+- 文件名，是一个字符串，可以是绝对路径（完整路径），也可以是相对路径。
+- 模式，是类ios定义的打开模式标记常量，即表示文件的打开方式，这些标记可以单独使用，也可以组合使用。
+
+| 模式标记常量                          | 适用对象                      | 作用                                   |
+| ------------------------------- | ------------------------- | ------------------------------------ |
+| `ios::in`                       | ifstream、fstream          | 以读方式打开文件，文件不存在，则打开出错                 |
+| `ios::out`                      | ofstream、fstream          | 以写方式打开文件，文件不存在，新建该文件；文件存在，在打开时清除文件内容 |
+| `ios::app`                      | ofstream                  | 以追加方式打开文件，在文件末尾添加数据，文件不存在则新建         |
+| `ios::ate`                      | ofstream                  | 打开一个已有文件，将文件读指针指向文件末尾，文件不存在则打开出错     |
+| `ios::trunc`                    | ofstream                  | 删除文件现有内容，单独使用时与ios::out相同            |
+| `ios::binary`                   | ifstream、ofstream、fstream | 以二进制方式打开文件。不指定的话默认是文本模式              |
+| `ios::in\|ios::out`             | fstream                   | 打开已存在的文件，可读可写，文件打开原内容保持不变，文件不存在则打开出错 |
+| `ios::in\|ios::out`             | ofstream                  | 和上面一样，区别在不能读                         |
+| `ios::in\|ios::out\|ios::trunc` | fstream                   | 一样，区别在文件不存在时新建，存在则打开时清除文件的内容         |
+
+#### 二、关闭文件
+当一个文件操作完毕应该及时关闭文件，发出关闭文件命令后，系统会将缓冲区中的数据完整地写入文件，同时添加文件结束标记，切断流对象与外部文件的连接。
+
+例子：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    string name;
+    ifstream obj1;
+    name = "test1.txt";
+    obj1.open(name, ios::in);
+    if (obj1) {
+        cout << name << "打开成功" << endl;
+    } else {
+        cout << name << "打开失败" << endl;
+    }
+
+    name = "test2.txt";
+    ofstream obj2(name, ios::out);
+    if (obj2) {
+        obj2 << "hello world" << endl; // 写入内容
+        obj2.close(); // 关闭文件并将写入内容从缓冲区写入到文件中
+    } else {
+        cout << name << "打开失败" << endl;
+    }
+    return 0;
+}
+```
+### 第三节 文件读写操作
+#### 一、读写文本文件
+C++将文件看成顺序排列的无结构的字节流。
+
+对于长度为n的文件来说，字节号从0~n-1。
+
+每个文件都有一个文件结束标识，也就是在n的位置上。对于文本文件来说，C++在iostream中定义了一个标识文件结束的标识常量`EOF`，其值为`0x1A`的字符。
+
+在关闭文件流时，该字符将被自动加入到文件尾部。在键盘操作时，按下`Ctrl + Z`键，就可以在标准输入流cin中输入文件结束符。
+
+使用文件流对象打开文件后，文件就成了一个输入流或输出流，对于文本文件，可以用cin、cout进行读写，在标准输入流/输出流中可以使用的成员函数和流操纵符同样适用于文件流。
+
+例子一，对文件score.txt进行输入/输出：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    char id[11], name[21];
+    int score;
+
+    string fileName = "./temp/score.txt";
+    ofstream file1(fileName, ios::out);
+    if (!file1) {
+        cout << fileName << "创建失败" << endl;
+        return 0;
+    }
+    cout << "请输入：学号 姓名 成绩（按Ctrl + Z结束输入）\n";
+    while (cin >> id >> name >> score) {
+        file1 << id << " " << name << " " << score << endl;
+    }
+    file1.close();
+    return 0;
+}
+```
+
+例子二，读取score.txt的内容并打印到屏幕
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    char id[11], name[21];
+    int score;
+
+    string fileName = "./temp/score.txt";
+    ifstream file1(fileName, ios::in);
+    if (!file1) {
+        cout << fileName << "文件不存在，打开失败" << endl;
+        return 0;
+    }
+
+    cout << "学生信息：" << endl;
+    cout << left << "学号 姓名 成绩" << endl;
+    while (file1 >> id >> name >> score) { // >> 按照空格或换行符进行分隔将数据存到不同的变量中
+        cout << left << id << " " << name << " " << score << endl;
+    }
+    file1.close();
+    return 0;
+}
+```
+输出结果：
+```
+学生信息：
+学号 姓名 成绩
+00123 张三 90
+00124 李四 9
+```
+
+例子三，逐行读取`score.txt`的内容并打印到屏幕：
+`score.txt`文件内容：
+```
+00123 张三 90
+00124 李四 9
+
+```
+代码：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    string name = "./temp/score.txt";
+    ifstream obj3(name, ios::in);
+    char ch;
+    bool newLine = true;
+    int lineCount = 0;
+    if (obj3) {
+        cout << name << "打开成功" << endl;
+        cout << "以下是文件内容：" << endl;
+        while ((ch = obj3.get()) != EOF) {
+            if (newLine) {
+                cout << setw(4) << ++lineCount << ':';
+                newLine = false;
+            }
+            if (ch == '\n') {
+                newLine = true;
+            }
+            cout << setw(0) << ch;
+        }
+        obj3.close();
+    }
+    return 0;
+}
+```
+输出结果：
+```
+./temp/score.txt打开成功
+以下是文件内容：
+   1:00123 张三 90
+   2:00124 李四 9
+```
+
+`fstream`成员函数官方文档：[std::basic\_fstream - cppreference.com](https://zh.cppreference.com/w/cpp/io/basic_fstream)
+
+例子四，对文本文件的内容排序，将结果输出到另一个文件：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+
+using namespace std;
+
+const int MAX_SIZE = 1000;
+
+class Student
+{
+public:
+    char id[11];
+    char name[21];
+    int score;
+} stu[MAX_SIZE];
+
+int compare(const void *obj1, const void *obj2)
+{
+    return (*(Student *)obj1).score - (*(Student *)obj2).score;
+}
+
+int main()
+{
+    string name = "./temp/score.txt";
+    ifstream file1(name, ios::in);
+    if (!file1) {
+        file1.close();
+        cout << name << "打开失败" << endl;
+        return 0;
+    }
+
+    name = "./temp/result.txt";
+    ofstream file2(name, ios::out);
+    if (!file2) {
+        file2.close();
+        cout << name << "打开失败" << endl;
+        return 0;
+    }
+
+    int n = 0;
+    cout << "排序前: \n";
+    while (file1 >> stu[n].id >> stu[n].name >> stu[n].score)
+    {
+        cout << stu[n].id << " " << stu[n].name << " " << stu[n].score << endl;
+        n++;
+    }
+
+    qsort(stu, n, sizeof(Student), compare);
+
+    cout << "排序后: \n";
+    for (int i = 0; i < n; i++)
+    {
+        cout << stu[i].id << " " << stu[i].name << " " << stu[i].score << endl;
+        file2 << stu[i].id << " " << stu[i].name << " " << stu[i].score << endl;
+    }
+    file1.close();
+    file2.close();
+    return 0;
+}
+
+```
+结果：
+```
+排序前:
+00123 张三 90
+00124 李四 9
+排序后:
+00124 李四 9
+00123 张三 90
+```
+
+`cstdlib`函数库官方文档：[标准库标头 \<cstdlib\> - cppreference.com](https://zh.cppreference.com/w/cpp/header/cstdlib)
+
+#### 二、读写二进制文件
+文本文件在存储数据时以ASCII码保存数据的，虽然使用上比较方便，但文本格式存储数据占用的空间大，而且数据输入/输出还要在内存和外存之间做数据格式的转换。
+
+二进制数据文件以基本类型数据的二进制格式存放，即内存和外存所存储的数据格式都是一致的二进制格式。
+
+存储长度仅与数据类型有关，例如一个double类型数据，无论是`-12345.678`，还是`3.1415926`，在内存中都采用二进制存储，占用8个字节，将这些数据保存到二进制文件中，也还是占用8个字节，与内存中的表示完全一致。
+
+**都不需要做数据格式的转换了，处理数据那不得比文本格式快多了，就好比国道和高速公路。**
+
+因此二进制数据文件又称为类型文件，由“数据类型”定义的一个“单元”通常包含若干个数据项，由若干个字节组成，称为一个文件的“记录”，或是文件的“元素”。
+
+##### 存储说明
+二进制数据文件的读写操作完全由程序控制，一般的文字处理软件不能直接参与编辑。
+
+例如用以下的类表示学生的信息：
+```cpp
+class Student
+{
+public:
+    char id[11];
+    char name[21];
+    int score;
+};
+```
+用文本文件存储内容如下：
+```
+00123 ZhangSan 90
+00124 LiSi 100
+00125 WangWu 78
+```
+
+在这种存储格式下，每个学生信息占一行，每行的长度都不一样，即使整个文件中的学生信息都是按姓名排好序的，要根据名字进行查找，仍然没有什么好办法，只能从头到尾对整个文件进行查找。
+
+如果把整个文件都读入内存，排序后再进行查找，当然速度会很快，但如果文件非常大，数据量巨大，把所有信息都读入内存根本不现实。
+
+而二进制的格式存储，则是把Student对象作为一个整体直接写入文件，在该文件中，每个学生的信息都占sizeof(Student)个字节，对象写入文件后一般称为“记录”，每个学生都对应一条记录，除了免去内存和外存之间的格式转换，也免去了对文件存储格式的设计，减少了工作量。
+
+那怎么读写二进制文件呢？
+
+答：可以用ios::binary()的方式打开二进制文件，调用`ifstream`或`fstream`的`read()`读数据，写数据则是调用`ofstream`或`fstream`的`write()`，**但不能用`cin`、`cout`从流中读写数据**。
+
+##### 用ostream::write()成员函数写文件
+原型如下：
+```cpp
+ostream & write(char *buffer, int nCount);
+```
+该成员函数将内存中buffer所指向的nCount个字节的内容写入文件，返回值是对函数所作用的对象的引用。
+
+例子一，以二进制文件保存学生信息
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class Student
+{
+public:
+    string id;
+    string name;
+    int score;
+};
+
+int main()
+{
+    Student stu;
+    string fileName = "./temp/student.dat";
+    ofstream file1(fileName, ios::out | ios::binary);
+    if (!file1) {
+        cerr << "无法打开文件: " << fileName << endl;
+        return 1;
+    }
+
+    cout << "请输入学生信息, 学号、姓名、成绩, 按'enter'输入下一个信息，输入'exit'退出" << endl;
+    while (true) {
+        cout << "请输入学号: ";
+        cin >> stu.id;
+        if (stu.id == "exit") break;
+
+        cout << "请输入姓名: ";
+        cin.ignore(); // 忽略之前留在输入流中的换行符
+        getline(cin, stu.name);
+
+        cout << "请输入成绩: ";
+        cin >> stu.score;
+
+        if (cin.fail()) {
+            cerr << "输入错误，请重新输入。" << endl;
+            cin.clear(); // 清除错误标志
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入直到下一个换行符
+            continue;
+        }
+
+        cout << "学号: " << stu.id << ", 姓名: " << stu.name << ", 成绩: " << stu.score << endl;
+        // file1.write(reinterpret_cast<const char *>(&stu), sizeof(stu));
+        file1.write((char *)(&stu), sizeof(stu));
+    }
+    file1.close();
+    return 0;
+}
+```
+
+说明：
+
+调用write()函数将对象stu作为一条记录完整写入文件，第一个参数`(char *) &stu`的含义是，通过运算符`&`得到对象stu的地址，然后通过强制类型转换成指向char型的指针，即转换为要写入文件的内存缓冲区的地址。第二个参数`sizeof(stu)`是得到对象stu占用的内存大小，`sizeof(stu)`的结果为36字节，既是对象stu在内存中占用的字节数，也是写入文件中一个记录的大小。
+
+> `sizeof(stu)`的结果等价于`sizeof(Student)`。
+
+例子二，向二进制文件追加数据：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class Student
+{
+public:
+    string id;
+    string name;
+    int score;
+};
+
+int main()
+{
+    char ch;
+    string fileName = "./temp/student.dat";
+    cout << "确定要向" << fileName << "文件中追加新的数据吗？(Y/N)" << endl;
+    cin >> ch;
+    if (ch != 'Y' && ch != 'y') {
+        cout << "输入错误" << endl;
+        return 1;
+    }
+    Student stu;
+    ofstream file1(fileName, ios::app | ios::binary);
+    if (!file1) {
+        cerr << "无法打开文件: " << fileName << endl;
+        return 1;
+    }
+
+    cout << "请输入学生信息, 学号 姓名 成绩, 每行一条学生记录，按'enter'输入下一个学生信息，输入'exit'退出" << endl;
+    while (true) {
+        cin >> stu.id;
+        if (stu.id == "exit") {
+            break;
+        }
+        cin >> stu.name >> stu.score;
+        file1.write((char *)(&stu), sizeof(stu));
+    }
+    file1.close();
+    return 0;
+}
+```
+
+##### 用istream::read()成员函数读文件
+原型如下：
+```cpp
+istream &read(char *buffer, int nCount);
+```
+该成员函数从文件中读取nCount个字节的内容，存放到buffer所指向的内存缓存区中，返回值是对函数所作用的对象的引用。该函数是非格式化操作，对读取的字节内容不进行处理，直接放入buffer中。
+
+##### 用ostream::gcount()成员函数得到读取字节数
+如果要知道每次读操作成功读取了多少个字节，可以在read()函数执行后立即调用文件流对象的成员函数`gcount()`，它的返回值就是最近一次read()函数执行时成功读取的字节数。
+
+原型：
+```cpp
+int gcount();
+```
+
+例子，从二进制文件中读取数据：
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+class Student
+{
+public:
+    string id;
+    string name;
+    int score;
+};
+
+int main()
+{
+    Student stu;
+    int count = 0, byte = 0;
+    string fileName = "./temp/student.dat";
+    ifstream file1(fileName, ios::in | ios::binary);
+    if (!file1) {
+        cerr << "无法打开文件: " << fileName << endl;
+        return 1;
+    }
+
+    cout << "学生信息：学生学号 姓名 成绩\n";
+    while (file1.read((char *)&stu, sizeof(stu))) { // 读取记录直到文件结束
+        cout << stu.id << " " << stu.name << " " << stu.score << endl;
+        count++;
+        byte += file1.gcount();
+    }
+    cout << "共有记录数: " << count << "; 字节数: " << byte << endl;
+    file1.close();
+    return 0;
+}
+```
+输出结果：
+```
+学生信息：学生学号 姓名 成绩
+00123 张三 98
+00124 李四 100
+00125 王五 80
+00126 老六 69
+00127 小七 87
+00128 老八 60
+00129 馋九 75
+共有记录数: 7; 字节数: 392
+```
+
+#### 三、用成员函数put()和get()读写文件
+略
+
+#### 四、文本文件与二进制文件的异同
+两者本质上没有差别，只在一些细节上存在差异。
+- 文本文件，以文本形式存储数据。
+	- 优点：具有较高的兼容性。
+	- 缺点：
+		- 存储一批纯数值信息时，要在数据之间人为地添加分隔符，在输入/输出过程中，系统要对内外存的数据格式进行相应转换。
+		- 不便于对数据进行随机访问。
+- 二进制文件，以二进制形式存储数据。
+	- 优点：方便对数据进行随机访问，相同数据类型的数据所占用空间的大小均是相同的，不必在数据之间人为地添加分隔符，在输入/输出的过程中，系统不需要对数据进行任何转换。
+	- 缺点：数据兼容性差，当在不同的系统或程序之间采用二进制文件进行数据交换时，读取文件的一方必须非常了解写文件的一方采用的是什么数据类型、数据格式等非常详细的信息之后，才能将二进制文件正确解读。
+### 第四节 随机访问文件
+略
+
 ## 第九章 函数模板与类模板
 ### 第一节 函数模板
 #### 一、函数模板的概念
@@ -1831,11 +2625,649 @@ template <模板参数表>
 - 如果参数是一个值，那就是这个值的类型。
 
 #### 二、函数模板的示例
-```c++
+例子一，简单示例：
+```cpp
+#include <iostream>
+using namespace std;
 
+template <typename T>
+T abs(T var)
+{
+    return var > 0 ? var : -var;
+}
+
+int main()
+{
+    int n = -5;
+    int m = 10;
+    double d = -.5;
+    float f = 3.2;
+    cout << n << "的绝对值是：" << abs(n) << endl;
+    cout << m << "的绝对值是：" << abs(m) << endl;
+    cout << d << "的绝对值是：" << abs(d) << endl;
+    cout << f << "的绝对值是：" << abs(f) << endl;
+    return 0;
+}
+```
+输出结果：
+```
+-5的绝对值是：5
+10的绝对值是：10
+-0.5的绝对值是：0.5
+3.2的绝对值是：3.2
+```
+
+例子二，对象交换的模板函数示例：
+```cpp
+#include <iostream>
+using namespace std;
+
+template <class T>
+void Swap(T &x, T &y)
+{
+    T temp = x;
+    x = y;
+    y = temp;
+}
+
+class MyDate
+{
+    int year, month, day;
+public:
+    MyDate()
+    {
+        year = 1970;
+        month = 5;
+        day = 04;
+    }
+    MyDate(int y, int m, int d): year(y), month(m), day(d)
+    {
+    }
+    void print()
+    {
+        cout << "y:" << year << "; m:" << month << "; d:" << day;
+    }
+};
+
+int main()
+{
+    int n = 1, m = 2;
+    cout << "转换前: n=" << n << "; m=" << m << endl;
+    Swap(n, m);
+    cout << "转换后: n=" << n << "; m=" << m << endl;
+
+    double f = 1.2, g = 2.3;
+    cout << "转换前: f=" << f << "; g=" << g << endl;
+    Swap<double>(f, g);
+    cout << "转换后: f=" << f << "; g=" << g << endl;
+
+    MyDate d1, d2(2000, 1, 1);
+    cout << "转换前: d1="; d1.print(); cout << "; d2="; d2.print(); cout << endl;
+    Swap<MyDate>(d1, d2);
+    cout << "转换后: d1="; d1.print(); cout << "; d2="; d2.print(); cout << endl;
+    return 0;
+}
+```
+输出结果：
+```
+转换前: n=1; m=2
+转换后: n=2; m=1
+转换前: f=1.2; g=2.3
+转换后: f=2.3; g=1.2
+转换前: d1=y:1970; m:5; d:4; d2=y:2000; m:1; d:1
+转换后: d1=y:2000; m:1; d:1; d2=y:1970; m:5; d:4
+```
+
+`Swap(double)(f, g)`是显示实例化模板的写法，和`Swap(f, g)`结果一样。
+
+显示实例化的格式如下：
+```cpp
+模板名 <实际类型参数1, 实际类型参数2, ...>
+```
+
+例子三，对象排序：
+```cpp
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+int myCompare(const T &left, const T &right)
+{
+    if (left < right) {
+        return -1;
+    }
+    if (right < left) {
+        return 1;
+    }
+    return 0;
+}
+
+template <typename T>
+void swap(T &x, T &y)
+{
+    T temp = x;
+    x = y;
+    y = temp;
+}
+
+int main()
+{
+    string strArr[10] = {"shang", "xia", "zuo", "you", "qian", "hou", "dong", "xi", "nan", "bei"};
+    int j;
+    string temp;
+    for (int i = 1; i < 10; i++)
+    {
+        j = i;
+        while (j > 0 && myCompare<string>(strArr[j-1], strArr[j]) > 0)
+        {
+            swap(strArr[j], strArr[j-1]);
+            j--;
+        }
+    }
+    for (int i = 0; i < 10; i++)
+        cout << strArr[i] << ","; // bei,dong,hou,nan,qian,shang,xi,xia,you,zuo,
+    cout << endl;
+    return 0;
+}
+```
+
+#### 三、函数或函数模板调用语句的匹配顺序
+例子一，函数调用顺序：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+void max(T a)
+{
+    cout << "Template 1" << endl;
+}
+
+template <class T1, class T2>
+void max(T1 a, T2 b)
+{
+    cout << "Template 2" << endl;
+}
+
+void max(double x, double y)
+{
+    cout << "Function max" << endl;
+}
+
+int main()
+{
+    int i = 4, j = 5;
+    max(1.2, 3.4); // Function max
+    max(i, j); // 并没有调用到函数，为什么？
+    max(1.2, 3); // Template 2
+    return 0;
+}
+```
+
+例子二，重载函数模板
+```cpp
+#include <iostream>
+
+using namespace std;
+
+class MyDate
+{
+    int year, month, day;
+public:
+    MyDate()
+    {
+        year = 1970;
+        month = 1;
+        day = 1;
+    }
+    MyDate(int y, int m, int d): year(y), month(m), day(d)
+    {
+    }
+    friend ostream &operator <<(ostream &os, MyDate &obj);
+};
+
+ostream &operator <<(ostream &os, MyDate &obj)
+{
+    os << obj.year << "/" << obj.month << "/" << obj.day;
+    return os;
+}
+
+template <class T>
+void print(T x, T y)
+{
+    cout << x << "," << y << endl;
+}
+
+template <class T1, class T2>
+void print(T1 x, T2 y)
+{
+    cout << x << "," << y << endl;
+}
+
+int main()
+{
+    int i = 4, j = 5;
+    print(i, j); // 4,5
+    MyDate d1, d2(2024, 4, 10);
+    print(d1, d2); // 1970/1/1,2024/4/10
+    print(i, d2); // 4,2024/4/10
+    return 0;
+}
+```
+
+### 第二节 类模板
+#### 一、类模板概念
+跟函数模板一样，类也有模板。不展开赘述。
+
+格式如下：
+```cpp
+template <模板参数表>
+class 类模板名
+{
+	类体定义
+}
+```
+
+类模板的成员函数既可以在类体内定义，这样就是内联函数，也可以在体外定义，格式如下：
+```cpp
+template <模板参数表>
+返回类型名 类模板名<模板参数标识符列表>::成员函数名(参数表)
+{
+	函数体
+}
+```
+类模板声明本身并不是一个类，不能直接生成对象，因为类型参数是不确定的，必须先为模板参数指定“实参”，即模板要“实例化”后，才可以创建对象。格式如下：
+```cpp
+类模板名 <模板参数表> 对象名1, ..., 对象名n;
+// or
+类模板名 <模板参数表> 对象名1(构造函数实参), ..., 对象名n(构造函数实参);
+```
+编译器由类模板生成类的过程称为类模板的实例化。**由类模板实例化得到的类称为模板类**。
+#### 二、类模板示例
+例子一，简单示例：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+class Pair
+{
+private:
+    T first;
+    T second;
+
+public:
+    Pair(T f, T s) : first(f), second(s) {}
+
+    T getFirst() const
+    {
+        return first;
+    }
+
+    T getSecond() const
+    {
+        return second;
+    }
+
+    void display() const {
+        cout << "First: " << first << ", Second: " << second << endl;
+    }
+};
+
+int main() {
+    Pair<int> intPair(10, 20);
+    intPair.display(); // First: 10, Second: 20
+
+    Pair<double> doublePair(3.14, 6.28);
+    doublePair.display(); // First: 3.14, Second: 6.28
+
+    Pair<char> charPair('a', 'b');
+    charPair.display(); // First: a, Second: b
+    return 0;
+}
+```
+
+例子二，使用普通参数的类模板：
+```cpp
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <int size, typename T>
+class Test
+{
+public:
+    T data;
+    double buffer[size];
+    T getData(T v);
+    double get(int index);
+};
+
+template <int i, typename A>
+A Test<i, A>::getData(A v)
+{
+    return v;
+}
+
+template <int x, typename y>
+double Test<x, y>::get(int j)
+{
+    return buffer[j];
+}
+
+int main() {
+    Test<6, string> obj;
+    int i;
+    double arr[6] = {12.1, 23.2, 34.3, 45.4, 56.5, 67.6};
+    for (i = 0; i < 6; i++)
+    {
+        obj.buffer[i] = arr[i] - 10;
+    }
+
+    obj.data = "demo";
+    for (i = 0; i < 6; i++)
+    {
+        cout << obj.get(i) << " "; // 2.1 13.2 24.3 35.4 46.5 57.6
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+例子三，在类模板中使用函数模板：
+```cpp
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <class T1, class T2>
+class Pair
+{
+public:
+    T1 first;
+    T2 second;
+    Pair(T1 f, T2 s) : first(f), second(s) {}
+    bool operator <(const Pair<T1, T2> &p) const;
+
+    template <class T>
+    void print(T x) const
+    {
+        cout << "first: " << x.first << "; second: " << x.second << endl;
+    }
+};
+
+template <class A1, class A2>
+bool Pair<A1, A2>::operator <(const Pair<A1, A2> &p) const
+{
+    return first < p.first;
+}
+
+int main() {
+    Pair<string, int> var1("Tom", 19);
+    Pair<string, int> var2("Jim", 21);
+    bool a = var1 < var2;
+    if (a == false) {
+        cout << "Jim排在Tom前面" << endl;
+    }
+    var1.print(var2); // first: Jim; second: 21
+
+    Pair<int, int> var3(20, 10);
+    var1.print(var3); // first: 20; second: 10
+
+    Pair<string, string> var4("word", "单词");
+    var1.print(var4); // first: word; second: 单词
+    return 0;
+}
+```
+
+例子四，类模板中使用静态成员：
+```cpp
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+class Test
+{
+public:
+    static T k;
+    static void increment()
+    {
+        k++;
+    }
+    Test()
+    {
+        k += 1;
+    }
+    Test(T num)
+    {
+        k += num;
+    }
+};
+
+template <typename T>
+T Test<T>::k = 0; // 静态成员变量的初始化
+
+int main() {
+    Test<int> a;
+    cout << "a: " << a.k << endl;
+
+    Test<double> b(3.6);
+    cout << "b: " << b.k << endl;
+
+    Test<int>::increment();
+    cout << "int increment以后，k: " << Test<int>::k << endl;
+
+    Test<double>::increment();
+    cout << "double increment以后，k: " << Test<double>::k << endl;
+    return 0;
+}
+```
+输出结果：
+```
+a: 1
+b: 3.6
+int increment以后，k: 2
+double increment以后，k: 4.6
+```
+#### 三、类模板与继承
+类之间允许继承，类模板同样也可以，分别是以下4种情况：
+1. 普通类继承模板类。
+2. 类模板继承普通类。
+3. 类模板继承模板类。
+4. 类模板继承模板类。
+
+例子一，普通类继承模板类：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Base
+{
+public:
+    T data;
+};
+
+class Test :public Base<int>
+{
+public:
+    void print()
+    {
+        cout << "data: " << data << endl;
+    }
+};
+
+int main() {
+    Test obj;
+    obj.print();
+    return 0;
+}
+```
+
+例子二，类模板继承普通类：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+class Base
+{
+public:
+    int k;
+    void print()
+    {
+        cout << "Base::print(), k: " << k << endl;
+    }
+};
+
+template <typename T>
+class Test :public Base
+{
+    T data;
+public:
+    void set(T d)
+    {
+        data = d;
+    }
+    void print()
+    {
+        Base::print();
+        cout << "Test::print(), data: " << data << endl;
+    }
+};
+
+int main() {
+    Test<string> obj;
+    obj.set("hello world");
+    obj.print();
+    return 0;
+}
+```
+
+输出结果：
+```
+Base::print(), k: 0
+Test::print(), data: hello world
+```
+
+例子三，类模板继承模板类：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Base
+{
+public:
+    T data1;
+    Base() {}
+    Base(T val): data1(val)
+    {
+    }
+    void print()
+    {
+        cout << "Base::print(), data1: " << data1 << endl;
+    }
+};
+
+template <class T1, class T2>
+class Test :public Base<T1>
+{
+public:
+    T2 data2;
+    Test() {}
+    Test(T1 val1, T2 val2): Base<T1>(val1), data2(val2)
+    {
+    }
+    void print()
+    {
+        Base<T1>::print();
+        cout << "Test::print(), data2: " << data2 << endl;
+    }
+};
+
+int main() {
+    Test<int, string> obj1(666, "hello");
+    obj1.print();
+
+    Test<int, double> obj2;
+    obj2.print();
+    return 0;
+}
+```
+
+输出结果：
+```
+Base::print(), data1: 666
+Test::print(), data2: hello
+Base::print(), data1: 0
+Test::print(), data2: 6.95313e-310
+```
+
+例子四，类模板继承模板类：
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Base
+{
+public:
+    T data1;
+    Base() {}
+    Base(T val): data1(val)
+    {
+    }
+    void print()
+    {
+        cout << "Base::print(), data1: " << data1 << endl;
+    }
+};
+
+template <class T>
+class Test :public Base<int>
+{
+public:
+    T data2;
+    Test() {}
+    Test(T val, int val2 = 123): Base<int>(val2), data2(val)
+    {
+    }
+    void print()
+    {
+        Base<int>::print();
+        cout << "Test::print(), data2: " << data2 << endl;
+    }
+};
+
+int main() {
+    Test<int> obj1(666);
+    obj1.print();
+
+    Test<string> obj2("hello world", 9527);
+    obj2.print();
+    return 0;
+}
+```
+
+输出结果：
+```
+Base::print(), data1: 123
+Test::print(), data2: 666
+Base::print(), data1: 9527
+Test::print(), data2: hello world
 ```
 
 ## 考试重点
-想啥呢？都是重点，不好好实操怎么可能学的会？笔试都是综合应用占比多，选择题20分，填空题15分，程序填空题20分，程序分析题30分，程序设计题15分，就问你想不想考过吧 （狗头）。
-
-> 其实是时间不够，懒得写了（狗头）。
+想啥呢？都是重点，不好好实操怎么可能学的会呢？笔试都是综合应用占比多，选择题20分，填空题15分，程序填空题20分，程序分析题30分，程序设计题15分，就问你想不想考过吧 （狗头）。
