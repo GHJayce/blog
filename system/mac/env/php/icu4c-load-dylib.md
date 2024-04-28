@@ -211,7 +211,7 @@ otool -L /usr/local/Cellar/icu4c/74.2/lib/libicui18n.72.dylib
 	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 905.6.0)
 ```
 
-将如上的依赖库`libicuuc.73.dylib`、`libicudata.73.dylib`、`libicui18n.73.dylib`加上一个`@loader_path`特殊前缀，使用`install_name_tool`命令进行修改（回答了Q3的问题）。
+将如上的依赖库`libicuuc.72.dylib`、`libicudata.72.dylib`、`libicui18n.72.dylib`加上一个`@loader_path`特殊前缀，使用`install_name_tool`命令进行修改（回答了Q3的问题）。
 
 因为其他文件操作也一样，所以这里直接贴完整的操作过程（**照抄作业即可**）：
 ```bash
@@ -263,7 +263,7 @@ Zend Engine v3.3.33, Copyright (c) 1998-2018 Zend Technologies
 
 > 本来是当时解决完事后打的草稿，后面打算改一下，看了下还挺有趣，不改了，浅浅记录一下。
 
-因为会用到`install_name_tool`对动态链接库进行修改，使用ln的方式会改到原文件，所以拷贝备份到目标目录，直接在备份文件上进行修改。
+因为会用到`install_name_tool`对动态链接库进行修改，使用ln的方式会改到原文件，所以做个拷贝到目标目录，直接在拷贝文件上进行修改。
 ```bash
 cd /usr/local/Cellar/icu4c/72.1/lib
 cp ./libicui18n.72.1.dylib /usr/local/opt/icu4c/lib/libicui18n.72.dylib
@@ -280,6 +280,7 @@ dyld: Library not loaded: libicuuc.72.dylib
   Reason: image not found
 zsh: abort      /usr/local/opt/php@7.3/bin/php --version
 ```
+
 发现还是报错，balabala 先爬帖，看有没有别的解决方法。
 
 发现`DYLD_LIBRARY_PATH`可以解决问题，但我不想用这种方式。
