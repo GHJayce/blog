@@ -172,12 +172,22 @@ zsh: abort /usr/local/opt/php@7.3/bin/php --version
 ```
 
 #### 方法一 DYLD_LIBRARY_PATH
-还是没找到路径对吧，最简单的处理方法是，设置`DYLD_LIBRARY_PATH`环境变量，动态链接器搜索动态库文件时，如果在其他位置都没找到的情况下，会在你设定变量的目录下寻找动态库。
+还是报错，还是没找到路径对吧，最简单的处理方法是，设置`DYLD_LIBRARY_PATH`环境变量，动态链接器搜索动态库文件时，如果在其他位置都没找到的情况下，会在你设定变量的目录下寻找动态库。
 
 设置在`.bash_profile`、`.bashrc`或`.zshrc`都可以（**以下命令可直接照抄**）：
 ```bash
 echo 'export DYLD_LIBRARY_PATH="/usr/local/opt/icu4c/lib/"' >> ~/.bash_profile
 source ~/.bash_profile
+```
+
+来检查一下效果：
+```bash
+php73 --version
+# 执行结果：
+PHP 7.3.33 (cli) (built: Jun  8 2023 15:56:42) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.3.33, Copyright (c) 1998-2018 Zend Technologies
+    with Zend OPcache v7.3.33, Copyright (c) 1999-2018, by Zend Technologies
 ```
 
 > 动态链接器搜索的位置一般有：
@@ -189,26 +199,32 @@ source ~/.bash_profile
 相对麻烦的做法，直接修改动态库文件所在的目录。
 
 根据错误内容，看下`libicui18n.72.dylib`、`libicuuc.72.dylib`、`libicuio.72.dylib`依赖的所有动态库。
+
 ```bash
 otool -L /usr/local/Cellar/icu4c/74.2/lib/libicui18n.72.dylib
 # 执行结果：
-libicuio.73.dylib:
-	libicuio.73.dylib (compatibility version 73.0.0, current version 73.2.0)
-	libicuuc.73.dylib (compatibility version 73.0.0, current version 73.2.0)
-	libicudata.73.dylib (compatibility version 73.0.0, current version 73.2.0)
-	libicui18n.73.dylib (compatibility version 73.0.0, current version 73.2.0)
+/usr/local/Cellar/icu4c/74.2/lib/libicui18n.72.dylib:
+	libicui18n.72.dylib (compatibility version 72.0.0, current version 72.1.0)
+	libicuuc.72.dylib (compatibility version 72.0.0, current version 72.1.0)
+	libicudata.72.dylib (compatibility version 72.0.0, current version 72.1.0)
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1292.100.5)
 	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 905.6.0)
 ```
+
 将如上的依赖库`libicuuc.73.dylib`、`libicudata.73.dylib`、`libicui18n.73.dylib`加上一个`@loader_path`特殊前缀，使用`install_name_tool`命令进行修改（回答了Q3的问题）。
 
 因为其他文件操作也一样，所以这里直接贴完整的操作过程（**照抄作业即可**）：
 ```bash
+cd /usr/local/opt/icu4c/lib
+
+# libicui18n.72.dylib
 install_name_tool -change libicuuc.72.dylib @loader_path/libicuuc.72.dylib ./libicui18n.72.dylib
 install_name_tool -change libicudata.72.dylib @loader_path/libicudata.72.dylib ./libicui18n.72.dylib
 
+# libicuuc.72.dylib
 install_name_tool -change libicudata.72.dylib @loader_path/libicudata.72.dylib ./libicuuc.72.dylib
 
+# libicuio.72.dylib
 install_name_tool -change libicudata.72.dylib @loader_path/libicudata.72.dylib ./libicuio.72.dylib
 install_name_tool -change libicuuc.72.dylib @loader_path/libicuuc.72.dylib ./libicuio.72.dylib
 install_name_tool -change libicui18n.72.dylib @loader_path/libicui18n.72.dylib ./libicuio.72.dylib
